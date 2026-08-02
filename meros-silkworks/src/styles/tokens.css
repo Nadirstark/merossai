@@ -1,0 +1,93 @@
+/* ==========================================================================
+   Meros Silkworks — design tokens
+   Direction: "quiet canvas, loud cloth" (§7)
+
+   The interface is near-silent; all chroma on the page comes from the
+   photography. The accent is never a fixed brand color — it is reassigned
+   per page from the featured piece's dominant dye.
+
+   NOTE: the dye pool below is PROVISIONAL. Values are re-sampled against
+   Saida's real product photography when it lands (decision #7, §12).
+   Canvas/ink/type/space are final unless flagged in review.
+   ========================================================================== */
+
+:root {
+  /* ---- surface & text ------------------------------------------------- */
+  --canvas: #faf9f7; /* near-white, warm by a hair — not cream */
+  --ink: #16191f;    /* deep near-black, slight blue cast */
+  --rule: rgb(22 25 31 / 0.09); /* hairlines, dividers: ~9% ink */
+  --muted: #7d7e80;  /* 55% ink over canvas, resolved — captions, metadata */
+
+  /* ---- dye pool (atlas dyes) ------------------------------------------
+     base  = fills, marks, hover washes, large graphics
+     -deep = text, links, focus — every -deep passes AA on --canvas
+     (magenta 5.3→8.4 · emerald 5.0→7.7 · indigo 9.5→12.1 · cadmium ✗→6.1)
+     Cadmium base is the one dye that may never carry text. */
+  --dye-magenta: #c6157c;
+  --dye-magenta-deep: #8f0e58;
+  --dye-emerald: #0e7c4a;
+  --dye-emerald-deep: #0a5c37;
+  --dye-indigo: #2e3a8c;
+  --dye-indigo-deep: #232c6b;
+  --dye-cadmium: #f2a90a;
+  --dye-cadmium-deep: #7a5a00;
+
+  /* ---- live accent -----------------------------------------------------
+     Reassigned per page (product pages: from the piece's dominant dye;
+     other pages: rotated from the pool). Components only ever reference
+     --accent / --accent-ink, never a dye directly. */
+  --accent: var(--dye-magenta);
+  --accent-ink: var(--dye-magenta-deep);
+
+  /* ---- type ------------------------------------------------------------ */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-body: 'Work Sans Variable', system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  /* Fraunces' WONK axis = deliberately irregular letterforms — the
+     typographic echo of the hand-dyed edge (§7). Display sizes only. */
+  --display-variation: 'SOFT' 30, 'WONK' 1;
+  --display-weight: 560;
+
+  --text-xs: 0.8125rem;   /* 13 — metadata, captions */
+  --text-sm: 0.9375rem;   /* 15 — UI, secondary */
+  --text-base: 1.0625rem; /* 17 — body */
+  --text-lg: 1.375rem;    /* 22 — leads, pull text */
+  --text-h2: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5.5rem);
+
+  --leading-tight: 1.08; /* display, set tight per §7 */
+  --leading-body: 1.6;
+  --tracking-display: -0.022em;
+  --tracking-caps: 0.08em; /* small caps labels: category, price meta */
+
+  /* ---- space (4px base) ----------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* ---- shape ----------------------------------------------------------- */
+  --radius: 2px; /* near-square: the feathered edge is the only softness */
+  --measure: 62ch;
+  --page-max: 76rem;
+  --page-pad: clamp(1rem, 4vw, 2.5rem);
+
+  /* ---- motion ---------------------------------------------------------- */
+  --ease: cubic-bezier(0.22, 0.61, 0.21, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+
+  /* ---- signature: the bleed (§7) --------------------------------------
+     One structural motif everywhere: section transitions, image reveals,
+     card hovers, the 404. --feather is the softness radius those
+     feathered-edge masks share. */
+  --feather: 14px;
+
+  /* ---- a11y ------------------------------------------------------------ */
+  --focus-ring: 0 0 0 2px var(--canvas), 0 0 0 4px var(--accent-ink);
+}

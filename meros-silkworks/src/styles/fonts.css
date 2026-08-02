@@ -1,0 +1,6 @@
+/* Self-hosted via Fontsource — no third-party font CDN at runtime.
+   Fraunces `full` = all axes (opsz, wght, SOFT, WONK); the WONK axis is
+   what gives display type its slightly irregular forms (§7).
+   Both faces cover latin-ext → ready for Uzbek Latin (oʻ, gʻ) in Phase 4. */
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/work-sans/index.css';

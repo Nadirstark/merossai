@@ -1,0 +1,27 @@
+---
+// SMOKE-TEST PAGE ONLY — replaced by the real Home (§4.1) once the
+// token system is confirmed. Exists so `astro build` validates the
+// scaffold: schemas, fonts, styles, sitemap.
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+const products = await getCollection('products');
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Meros Silkworks — scaffold</title>
+  </head>
+  <body>
+    <main style="padding: var(--space-16) var(--page-pad); max-width: var(--page-max); margin-inline: auto;">
+      <h1 style="font-size: var(--text-display);">Meros Silkworks</h1>
+      <p style="color: var(--muted); margin-top: var(--space-4);">
+        Scaffold OK · {products.length} products in the collection · build in progress
+      </p>
+    </main>
+  </body>
+</html>
