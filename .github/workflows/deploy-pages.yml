@@ -1,5 +1,7 @@
 name: Deploy to GitHub Pages
 
+# Deploys meros-silkworks/dist to GitHub Pages under the merossilkworks.com
+# custom domain (set in repo Settings > Pages).
 on:
   push:
     branches: [main]
