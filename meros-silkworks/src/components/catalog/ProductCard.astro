@@ -1,0 +1,116 @@
+---
+// §5 catalog component. Card: image (hover → second image), title, price,
+// "One of a kind" badge where applicable (§4.2). When the product carries
+// an optional `accent` (§6, content.config.ts), that dye pair is set as
+// inline --accent/--accent-ink so the card's own accent-driven bits (badge,
+// hover states elsewhere on the page) pick it up without a rotating fallback.
+import type { CollectionEntry } from 'astro:content';
+import ImageBleed from '../system/Image.astro';
+import Badge from './Badge.astro';
+import PriceTag from './PriceTag.astro';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  class?: string;
+}
+
+const { product, class: className } = Astro.props;
+const { title, price, currency, images, isOneOfAKind, accent } = product.data;
+
+const primaryImage = images.find((image) => image.type === 'primary') ?? images[0];
+const hoverImage = images.find((image) => image !== primaryImage) ?? primaryImage;
+const hasHoverImage = hoverImage !== primaryImage;
+
+const accentStyle = accent ? `--accent: ${accent.base}; --accent-ink: ${accent.deep};` : undefined;
+---
+
+<a href={`/shop/${product.id}`} class:list={['product-card', className]} style={accentStyle}>
+  <span class="product-card__media">
+    <ImageBleed
+      src={primaryImage.src}
+      alt={primaryImage.alt}
+      width={600}
+      height={750}
+      class="product-card__image product-card__image--primary"
+    />
+    {
+      hasHoverImage && (
+        <ImageBleed
+          src={hoverImage.src}
+          alt={hoverImage.alt}
+          width={600}
+          height={750}
+          class="product-card__image product-card__image--hover"
+        />
+      )
+    }
+    {isOneOfAKind && <Badge variant="accent" class="product-card__badge">One of a kind</Badge>}
+  </span>
+  <span class="product-card__meta">
+    <span class="product-card__title">{title}</span>
+    <PriceTag price={price} currency={currency} />
+  </span>
+</a>
+
+<style>
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--rule);
+  }
+
+  .product-card__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity var(--dur-2) var(--ease);
+  }
+
+  .product-card__image--primary {
+    opacity: 1;
+  }
+
+  .product-card__image--hover {
+    opacity: 0;
+  }
+
+  .product-card:hover .product-card__image--hover,
+  .product-card:focus-visible .product-card__image--hover {
+    opacity: 1;
+  }
+
+  .product-card:hover .product-card__image--primary,
+  .product-card:focus-visible .product-card__image--primary {
+    opacity: 0;
+  }
+
+  .product-card__badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+  }
+
+  .product-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .product-card__title {
+    font-size: var(--text-sm);
+    color: var(--ink);
+  }
+</style>

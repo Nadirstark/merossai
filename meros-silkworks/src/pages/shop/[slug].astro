@@ -1,0 +1,226 @@
+---
+// Product detail — §4.3 structure, in order: gallery, title+price,
+// one-of-a-kind notice, short description, PurchaseAction, details
+// accordion, optional pattern story, related pieces.
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORY_LABELS } from '../../content.config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductGallery from '../../components/catalog/ProductGallery.astro';
+import PriceTag from '../../components/catalog/PriceTag.astro';
+import Badge from '../../components/catalog/Badge.astro';
+import Accordion from '../../components/system/Accordion.astro';
+import PurchaseAction from '../../components/catalog/PurchaseAction.astro';
+import ProductGrid from '../../components/catalog/ProductGrid.astro';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const {
+  title,
+  price,
+  currency,
+  images,
+  shortDescription,
+  materials,
+  dimensions,
+  care,
+  fabricOrigin,
+  patternName,
+  isOneOfAKind,
+  inStock,
+  etsyUrl,
+  category,
+  accent,
+} = product.data;
+
+// Decision #2 (§11) — never invent a region. Absent real sourcing info,
+// fall back to the generic, true-by-default line.
+const fabricOriginText = fabricOrigin ?? 'Traditional Uzbek atlas ikat.';
+
+const allProducts = await getCollection('products');
+const relatedProducts = allProducts
+  .filter((p) => p.id !== product.id && p.data.category === category)
+  .slice(0, 3);
+
+const accentStyle = accent ? `--accent: ${accent.base}; --accent-ink: ${accent.deep};` : undefined;
+
+const primaryImage = images.find((image) => image.type === 'primary') ?? images[0];
+const siteUrl = Astro.site?.href ?? 'https://merossilkworks.com/';
+const canonicalUrl = new URL(`/shop/${product.id}`, siteUrl).href;
+const categoryUrl = new URL(`/shop/category/${category}`, siteUrl).href;
+const absoluteImageUrl = new URL(primaryImage.src.src, siteUrl).href;
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: title,
+    description: shortDescription,
+    image: absoluteImageUrl,
+    brand: { '@type': 'Brand', name: 'Meros Silkworks' },
+    offers: {
+      '@type': 'Offer',
+      url: etsyUrl,
+      priceCurrency: currency,
+      price,
+      availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Shop', item: new URL('/shop', siteUrl).href },
+      { '@type': 'ListItem', position: 2, name: CATEGORY_LABELS[category], item: categoryUrl },
+      { '@type': 'ListItem', position: 3, name: title, item: canonicalUrl },
+    ],
+  },
+];
+---
+
+<BaseLayout title={`${title} — Meros Silkworks`} description={shortDescription} image={primaryImage.src.src} structuredData={structuredData}>
+  <div class="product" style={accentStyle}>
+    <div class="product__gallery">
+      <ProductGallery images={images} idPrefix={product.id} />
+    </div>
+
+    <div class="product__details">
+      <h1 class="product__title">{title}</h1>
+      {isOneOfAKind && <Badge variant="accent" class="product__badge">One of a kind</Badge>}
+      <PriceTag price={price} currency={currency} class="product__price" />
+
+      {
+        isOneOfAKind && (
+          <p class="product__oak-notice">
+            Cut from handwoven yardage, so the exact placement of the dye pattern is unique to this
+            piece — it may sit a little differently than in the photos.
+          </p>
+        )
+      }
+
+      <p class="product__short-desc">{shortDescription}</p>
+
+      <div class="product__purchase">
+        <PurchaseAction etsyUrl={etsyUrl} inStock={inStock} title={title} />
+      </div>
+
+      <div class="product__accordions">
+        <Accordion label="Materials">{materials}</Accordion>
+        {dimensions && <Accordion label="Dimensions">{dimensions}</Accordion>}
+        <Accordion label="Care">{care}</Accordion>
+        <Accordion label="Fabric origin">{fabricOriginText}</Accordion>
+      </div>
+
+      {
+        patternName && (
+          <div class="product__pattern-story">
+            <h2 class="product__pattern-story-title">The story of this pattern</h2>
+            <p>This piece carries the {patternName} pattern — one of the named traditional ikat motifs.</p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    relatedProducts.length > 0 && (
+      <section class="related">
+        <h2 class="related__heading">You might also like</h2>
+        <ProductGrid products={relatedProducts} />
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .product {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) 0;
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .product__title {
+    font-size: var(--text-h2);
+  }
+
+  .product__badge {
+    display: inline-flex;
+    margin-top: var(--space-3);
+  }
+
+  .product__price {
+    display: block;
+    margin-top: var(--space-3);
+    font-size: var(--text-lg);
+  }
+
+  .product__oak-notice {
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  .product__short-desc {
+    margin-top: var(--space-4);
+    color: var(--ink);
+    max-width: var(--measure);
+  }
+
+  .product__purchase {
+    margin-top: var(--space-6);
+  }
+
+  .product__accordions {
+    margin-top: var(--space-8);
+  }
+
+  .product__pattern-story {
+    margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--rule);
+  }
+
+  .product__pattern-story-title {
+    font-size: var(--text-lg);
+  }
+
+  .product__pattern-story p {
+    margin-top: var(--space-2);
+    color: var(--muted);
+  }
+
+  .related {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-24) var(--page-pad) var(--space-24);
+  }
+
+  .related__heading {
+    font-size: var(--text-h2);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .product {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+      align-items: start;
+    }
+  }
+</style>

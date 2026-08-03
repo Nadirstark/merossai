@@ -1,0 +1,79 @@
+---
+// §5 layout component. Primary nav, confirmed order (§3): Custom stays
+// top-level — it's a P0 revenue line, not nested under Shop.
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+const items: NavItem[] = [
+  { label: 'Shop', href: '/shop' },
+  { label: 'Custom', href: '/custom' },
+  { label: 'About', href: '/about' },
+  { label: 'Craft', href: '/craft' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+---
+
+<nav class="nav" aria-label="Primary">
+  <ul class="nav__list">
+    {
+      items.map((item) => (
+        <li>
+          <a href={item.href} class="nav__link" aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav__link {
+    display: inline-block;
+    padding: var(--space-2) 0;
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--dur-1) var(--ease),
+      color var(--dur-1) var(--ease);
+  }
+
+  .nav__link:hover {
+    color: var(--accent-ink);
+  }
+
+  .nav__link[aria-current='page'] {
+    color: var(--accent-ink);
+    border-color: var(--accent-ink);
+  }
+
+  @media (min-width: 48rem) {
+    .nav__list {
+      gap: var(--space-6);
+    }
+  }
+</style>

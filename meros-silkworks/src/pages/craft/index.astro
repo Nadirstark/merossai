@@ -1,0 +1,81 @@
+---
+// The Craft index — §4.5. The SEO engine and differentiator vs. printed
+// imitations, per the doc. The craft collection has no posts seeded yet
+// (Phase 2, §10) — this page's own framing copy is real, not placeholder,
+// so it stays indexable even while the grid below it is empty.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CraftCard from '../../components/content/CraftCard.astro';
+
+const posts = (await getCollection('craft')).sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+---
+
+<BaseLayout
+  title="The Craft — Meros Silkworks"
+  description="How atlas ikat is made: abrbandi, the resist-dye process, the doppi tradition, and how to tell handwoven ikat from a printed imitation."
+>
+  <div class="page">
+    <header class="page__header">
+      <h1 class="page__title">The Craft</h1>
+      <p class="page__intro">
+        Atlas ikat isn't printed — every pattern is bound and dyed into the thread before a single
+        thread crosses the loom. This is where that process, and the tradition behind it, gets
+        explained properly.
+      </p>
+    </header>
+
+    {
+      posts.length > 0 ? (
+        <div class="craft-grid">
+          {posts.map((post) => (
+            <CraftCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="craft-empty">
+          Posts on the abrbandi process, the doppi tradition, and how to spot handwoven ikat are on
+          the way.
+        </p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) var(--space-24);
+  }
+
+  .page__title {
+    font-size: var(--text-display);
+  }
+
+  .page__intro {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  .craft-grid {
+    margin-top: var(--space-12);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8) var(--space-6);
+  }
+
+  .craft-empty {
+    margin-top: var(--space-12);
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 48rem) {
+    .craft-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

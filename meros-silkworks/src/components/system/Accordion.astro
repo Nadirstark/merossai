@@ -1,0 +1,76 @@
+---
+// §5 system component. Native <details>/<summary> — one disclosure per
+// instance, so a product page composes Materials/Dimensions/Care/Fabric
+// origin as a stack of <Accordion> rather than one monolithic widget.
+interface Props {
+  label: string;
+  open?: boolean;
+  class?: string;
+}
+
+const { label, open = false, class: className } = Astro.props;
+---
+
+<details class:list={['accordion', className]} open={open}>
+  <summary class="accordion__summary">
+    <span class="accordion__label">{label}</span>
+    <svg class="accordion__icon" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+      <path
+        d="M1 1L5 5L9 1"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </summary>
+  <div class="accordion__content">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .accordion {
+    border-top: 1px solid var(--rule);
+  }
+
+  .accordion:last-of-type {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion__icon {
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: transform var(--dur-1) var(--ease);
+  }
+
+  .accordion[open] .accordion__icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion__content {
+    padding-bottom: var(--space-4);
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+</style>

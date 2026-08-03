@@ -1,0 +1,15 @@
+---
+// §5 system component. Renders one JSON-LD <script> from a `data` prop —
+// used for Product, Organization/LocalBusiness, Article, BreadcrumbList (§8).
+interface Props {
+  data: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { data } = Astro.props;
+
+// Escape "<" so a stray "</script>" inside string values can't break out
+// of the script element.
+const json = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" set:html={json} is:inline />

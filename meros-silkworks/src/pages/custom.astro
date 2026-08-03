@@ -1,0 +1,119 @@
+---
+// Custom — §4.6. Confirmed P0 revenue line, so this page gets the same
+// production weight as a product page: a real intro, a gallery (placeholder
+// until real past work is available), turnaround expectations stated up
+// front, and the full form.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ImageBleed from '../components/system/Image.astro';
+import CustomOrderForm from '../components/forms/CustomOrderForm.astro';
+import pastPiece1 from '../assets/custom/past-piece-1.jpg';
+import pastPiece2 from '../assets/custom/past-piece-2.jpg';
+import pastPiece3 from '../assets/custom/past-piece-3.jpg';
+
+const pastPieces = [
+  { image: pastPiece1, alt: '[Placeholder — past custom piece, swap for a real photo]' },
+  { image: pastPiece2, alt: '[Placeholder — past custom piece, swap for a real photo]' },
+  { image: pastPiece3, alt: '[Placeholder — past custom piece, swap for a real photo]' },
+];
+---
+
+<BaseLayout
+  title="Custom Orders — Meros Silkworks"
+  description="Commission a custom atlas ikat piece for a wedding or event, hand-cut and made to order in New Jersey."
+>
+  <div class="page">
+    <header class="page__header">
+      <p class="page__eyebrow">Custom Orders</p>
+      <h1 class="page__title">Wedding or event piece? Let's talk.</h1>
+      <p class="page__intro">
+        The Baska skirt started as a custom order — so have most of the wedding and event pieces made
+        here. Typical turnaround is 3–5 weeks depending on the piece and current queue: a quote comes
+        back first, then a deposit locks in the fabric and the queue slot, then it's cut and sewn by
+        hand.
+      </p>
+    </header>
+
+    <section class="past-pieces">
+      <h2 class="section__heading">Past custom pieces</h2>
+      <p class="past-pieces__note">
+        [PLACEHOLDER — swap in real photos of past custom work once available]
+      </p>
+      <div class="past-pieces__grid">
+        {
+          pastPieces.map((piece) => (
+            <ImageBleed
+              src={piece.image}
+              alt={piece.alt}
+              width={500}
+              height={625}
+              class="past-pieces__image"
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="custom-form-section">
+      <h2 class="section__heading">Start your request</h2>
+      <CustomOrderForm />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) var(--space-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .page__eyebrow {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .page__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-display);
+  }
+
+  .page__intro {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  .section__heading {
+    font-size: var(--text-h2);
+  }
+
+  .past-pieces__note {
+    margin-top: var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  .past-pieces__grid {
+    margin-top: var(--space-6);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  .past-pieces__image {
+    aspect-ratio: 4 / 5;
+  }
+
+  .custom-form-section {
+    max-width: 32rem;
+  }
+
+  .custom-form-section > :global(form) {
+    margin-top: var(--space-6);
+  }
+</style>

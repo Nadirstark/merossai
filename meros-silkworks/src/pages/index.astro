@@ -1,27 +1,198 @@
 ---
-// SMOKE-TEST PAGE ONLY — replaced by the real Home (§4.1) once the
-// token system is confirmed. Exists so `astro build` validates the
-// scaffold: schemas, fonts, styles, sitemap.
-import '../styles/fonts.css';
-import '../styles/tokens.css';
-import '../styles/global.css';
+// Home — §4.1. Every block from the table: Hero, Featured, Story teaser,
+// Craft teaser, Custom/event CTA, Reviews, Instagram strip, Email capture.
 import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/content/Hero.astro';
+import StoryBlock from '../components/content/StoryBlock.astro';
+import ProcessSteps from '../components/content/ProcessSteps.astro';
+import ReviewQuote from '../components/content/ReviewQuote.astro';
+import InstagramStrip from '../components/content/InstagramStrip.astro';
+import ProductGrid from '../components/catalog/ProductGrid.astro';
+import Button from '../components/system/Button.astro';
+import NewsletterForm from '../components/forms/NewsletterForm.astro';
+
 const products = await getCollection('products');
+const featuredProducts = products.filter((product) => product.data.featured);
+const reviews = await getCollection('reviews');
+
+// Lead with the fabric (§4.1): the macro "detail" shot of whichever
+// featured piece has one, not a model.
+const heroProduct = featuredProducts.find((product) => product.data.images.some((image) => image.type === 'detail')) ?? products[0];
+const heroImage = heroProduct.data.images.find((image) => image.type === 'detail') ?? heroProduct.data.images[0];
+
+// Instagram strip: curated placeholders until real photography and post
+// links land (§11 decision #7) — every tile points at the profile itself
+// rather than a fabricated per-post URL.
+const instagramPosts = products.slice(0, 6).map((product) => ({
+  image: product.data.images[0].src,
+  alt: product.data.images[0].alt,
+  href: 'https://instagram.com/merossilkworks',
+}));
+
+const siteUrl = Astro.site?.href ?? 'https://merossilkworks.com/';
+
+// §8: Organization + LocalBusiness on home. No street address exists to
+// give (§11 decision #2 precedent — don't fabricate specifics), so the
+// address only carries what's actually confirmed: New Jersey, US.
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Meros Silkworks',
+    url: siteUrl,
+    sameAs: ['https://instagram.com/merossilkworks', 'https://etsy.com/shop/MerosSilkworks'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'Meros Silkworks',
+    url: siteUrl,
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: 'NJ',
+      addressCountry: 'US',
+    },
+  },
+];
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>Meros Silkworks — scaffold</title>
-  </head>
-  <body>
-    <main style="padding: var(--space-16) var(--page-pad); max-width: var(--page-max); margin-inline: auto;">
-      <h1 style="font-size: var(--text-display);">Meros Silkworks</h1>
-      <p style="color: var(--muted); margin-top: var(--space-4);">
-        Scaffold OK · {products.length} products in the collection · build in progress
+<BaseLayout
+  title="Meros Silkworks — Handmade Uzbek Atlas Ikat Silk Accessories"
+  description="Handmade accessories and apparel cut from handwoven Uzbek atlas ikat silk — hair ties to custom wedding pieces, made by hand in New Jersey."
+  structuredData={structuredData}
+>
+  <Hero image={heroImage.src} alt={heroImage.alt}>
+    <h1>Meros Silkworks</h1>
+    <p>Rooted in Tradition. Designed for now.</p>
+  </Hero>
+
+  <div class="page">
+    <section class="section" aria-labelledby="featured-heading">
+      <h2 id="featured-heading" class="section__heading">Featured pieces</h2>
+      <ProductGrid products={featuredProducts} />
+    </section>
+
+    <section class="section">
+      <StoryBlock eyebrow="About Meros" title="Meros means inheritance" href="/about" linkLabel="Read her story">
+        <p>
+          Every piece here starts with <em>meros</em> — Uzbek for inheritance — cut from handwoven atlas
+          ikat silk and carried from Uzbekistan into a small studio in New Jersey.
+        </p>
+      </StoryBlock>
+    </section>
+
+    <section class="section">
+      <StoryBlock eyebrow="The Craft" title="Every color starts as a knot" href="/craft" linkLabel="Explore the craft">
+        <p>
+          Abrbandi, the resist-dye process behind atlas ikat, binds and dyes each thread before it's
+          ever woven — that's where the feathered edge of color comes from.
+        </p>
+      </StoryBlock>
+      <ProcessSteps
+        class="section__steps"
+        steps={[
+          { title: 'Bind', description: 'Threads are bound in tight sections that will resist the dye.' },
+          { title: 'Dye', description: 'Each bound section passes through a sequence of dye baths.' },
+          { title: 'Weave', description: 'The dyed threads are woven, and the pattern finally appears.' },
+        ]}
+      />
+    </section>
+
+    <section class="section cta-custom">
+      <p class="cta-custom__eyebrow">Custom Orders</p>
+      <h2 class="cta-custom__title">Wedding or event piece? Let's talk.</h2>
+      <p class="cta-custom__body">
+        The Baska skirt started as a custom order — so have most of the wedding and event pieces made
+        here. Bring a date, a budget, and a color in mind.
       </p>
-    </main>
-  </body>
-</html>
+      <div class="cta-custom__action">
+        <Button href="/custom">Start a custom request</Button>
+      </div>
+    </section>
+
+    {
+      reviews.length > 0 && (
+        <section class="section" aria-labelledby="reviews-heading">
+          <h2 id="reviews-heading" class="section__heading">
+            What people are saying
+          </h2>
+          <div class="reviews-grid">
+            {reviews.map((review) => (
+              <ReviewQuote review={review} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <section class="section" aria-labelledby="instagram-heading">
+      <h2 id="instagram-heading" class="section__heading">On Instagram</h2>
+      <InstagramStrip posts={instagramPosts} />
+    </section>
+
+    <section class="section" aria-labelledby="newsletter-heading">
+      <h2 id="newsletter-heading" class="section__heading">Stay in the loop</h2>
+      <NewsletterForm />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  .section__heading {
+    font-size: var(--text-h2);
+    margin-bottom: var(--space-6);
+  }
+
+  .section__steps {
+    margin-top: var(--space-8);
+  }
+
+  .reviews-grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 48rem) {
+    .reviews-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .cta-custom {
+    padding: var(--space-8);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--accent) 12%, var(--canvas));
+  }
+
+  .cta-custom__eyebrow {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: var(--space-2);
+  }
+
+  .cta-custom__title {
+    font-size: var(--text-h2);
+  }
+
+  .cta-custom__body {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  .cta-custom__action {
+    margin-top: var(--space-6);
+  }
+</style>

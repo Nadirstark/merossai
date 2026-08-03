@@ -1,0 +1,46 @@
+---
+// §5 layout component. Text wordmark — no logotype asset exists yet.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a href="/" class:list={['logo', className]} aria-label="Meros Silkworks — home">
+  <span class="logo__brand">Meros</span>
+  <span class="logo__mark">Silkworks</span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-variation-settings: var(--display-variation);
+    font-size: var(--text-lg);
+    letter-spacing: var(--tracking-display);
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--dur-1) var(--ease);
+  }
+
+  .logo__mark {
+    color: var(--muted);
+    font-weight: 400;
+    transition: color var(--dur-1) var(--ease);
+  }
+
+  .logo:hover,
+  .logo:focus-visible {
+    color: var(--accent-ink);
+  }
+
+  .logo:hover .logo__mark,
+  .logo:focus-visible .logo__mark {
+    color: var(--accent-ink);
+  }
+</style>

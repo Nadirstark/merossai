@@ -1,0 +1,94 @@
+---
+// §5 forms component. Name/email/message + response-time note (§4.7).
+// action="#" is a placeholder — the real form backend is a Phase 2 decision.
+import Button from '../system/Button.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<form class:list={['contact-form', className]} action="#" method="post">
+  <div class="field">
+    <label for="contact-name" class="field__label">Name</label>
+    <input id="contact-name" name="name" type="text" autocomplete="name" required class="field__input" />
+  </div>
+
+  <div class="field">
+    <label for="contact-email" class="field__label">Email</label>
+    <input id="contact-email" name="email" type="email" autocomplete="email" required class="field__input" />
+  </div>
+
+  <div class="field">
+    <label for="contact-message" class="field__label">Message</label>
+    <textarea
+      id="contact-message"
+      name="message"
+      rows="5"
+      required
+      class="field__input field__input--textarea"
+    ></textarea>
+  </div>
+
+  <div class="contact-form__footer">
+    <p class="contact-form__note">Usually get back to you within 2–3 days.</p>
+    <Button type="submit">Send message</Button>
+  </div>
+</form>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 32rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .field__label {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field__input {
+    padding: var(--space-3);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: var(--text-base);
+    font-family: inherit;
+  }
+
+  .field__input::placeholder {
+    color: var(--muted);
+  }
+
+  .field__input--textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  .contact-form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .contact-form__note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    max-width: 32ch;
+  }
+</style>

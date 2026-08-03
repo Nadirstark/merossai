@@ -1,0 +1,190 @@
+---
+// §5 forms component. Exact field set per §4.6. Custom is a confirmed P0
+// revenue line (§11 decision #6), so the turnaround-time note sits visibly
+// next to submit rather than buried in copy — nothing kills an inquiry
+// faster than not knowing if 3 weeks or 3 months is normal.
+// action="#" is a placeholder — the real form backend is a Phase 2 decision.
+import Button from '../system/Button.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const PIECE_TYPES = ['Baska', 'Vest', 'Scarf', 'Hair accessory', 'Other'];
+const BUDGET_RANGES = ['Under $50', '$50–$100', '$100–$200', '$200+'];
+---
+
+<form class:list={['custom-form', className]} action="#" method="post" enctype="multipart/form-data">
+  <div class="field">
+    <label for="custom-name" class="field__label">Name</label>
+    <input id="custom-name" name="name" type="text" autocomplete="name" required class="field__input" />
+  </div>
+
+  <div class="field">
+    <label for="custom-email" class="field__label">Email</label>
+    <input id="custom-email" name="email" type="email" autocomplete="email" required class="field__input" />
+  </div>
+
+  <div class="field">
+    <label for="custom-piece-type" class="field__label">Piece type</label>
+    <select id="custom-piece-type" name="pieceType" required class="field__input field__input--select">
+      <option value="" disabled selected>Select a piece type</option>
+      {PIECE_TYPES.map((type) => <option value={type}>{type}</option>)}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="custom-event-date" class="field__label">Event date</label>
+    <input id="custom-event-date" name="eventDate" type="date" required class="field__input" />
+  </div>
+
+  <div class="field">
+    <label for="custom-fabric-preference" class="field__label">Fabric preference</label>
+    <input
+      id="custom-fabric-preference"
+      name="fabricPreference"
+      type="text"
+      placeholder="e.g. a specific color, motif, or reference photo"
+      required
+      class="field__input"
+    />
+  </div>
+
+  <div class="field">
+    <label for="custom-size-notes" class="field__label">Size notes</label>
+    <textarea
+      id="custom-size-notes"
+      name="sizeNotes"
+      rows="4"
+      required
+      class="field__input field__input--textarea"
+    ></textarea>
+  </div>
+
+  <div class="field">
+    <label for="custom-budget-range" class="field__label">Budget range</label>
+    <select id="custom-budget-range" name="budgetRange" required class="field__input field__input--select">
+      <option value="" disabled selected>Select a budget range</option>
+      {BUDGET_RANGES.map((range) => <option value={range}>{range}</option>)}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="custom-reference-images" class="field__label">
+      Reference images <span class="field__optional">(optional)</span>
+    </label>
+    <input
+      id="custom-reference-images"
+      name="referenceImages"
+      type="file"
+      accept="image/*"
+      multiple
+      class="field__input field__input--file"
+    />
+  </div>
+
+  <div class="custom-form__footer">
+    <p class="custom-form__note">Typical turnaround is 3–5 weeks depending on the piece and current queue.</p>
+    <Button type="submit">Send custom request</Button>
+  </div>
+</form>
+
+<style>
+  .custom-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 32rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .field__label {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field__optional {
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .field__input {
+    padding: var(--space-3);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: var(--text-base);
+    font-family: inherit;
+  }
+
+  .field__input::placeholder {
+    color: var(--muted);
+  }
+
+  .field__input--select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position:
+      calc(100% - 20px) center,
+      calc(100% - 15px) center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: var(--space-8);
+  }
+
+  .field__input--textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+
+  .field__input--file {
+    padding: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .field__input--file::file-selector-button {
+    margin-right: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-1) var(--ease),
+      color var(--dur-1) var(--ease);
+  }
+
+  .field__input--file::file-selector-button:hover {
+    background: var(--ink);
+    color: var(--canvas);
+  }
+
+  .custom-form__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .custom-form__note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    max-width: 40ch;
+  }
+</style>

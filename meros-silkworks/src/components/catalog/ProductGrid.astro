@@ -1,0 +1,39 @@
+---
+// §5 catalog component. 2-up mobile / 3-up desktop (§4.2).
+import type { CollectionEntry } from 'astro:content';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: CollectionEntry<'products'>[];
+  class?: string;
+}
+
+const { products, class: className } = Astro.props;
+---
+
+<ul class:list={['product-grid', className]}>
+  {
+    products.map((product) => (
+      <li>
+        <ProductCard product={product} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6) var(--space-4);
+    list-style: none;
+    padding: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .product-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+  }
+</style>

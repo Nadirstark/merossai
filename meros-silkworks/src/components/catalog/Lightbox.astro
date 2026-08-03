@@ -1,0 +1,90 @@
+---
+// §5 catalog component. Native <dialog> does most of the work: Escape-to-close
+// and focus-trapping come free from showModal(), so the only JS needed is
+// wiring the close button, backdrop-click, and open triggers.
+interface Props {
+  id: string;
+  label: string;
+  class?: string;
+}
+
+const { id, label, class: className } = Astro.props;
+---
+
+<dialog id={id} class:list={['lightbox', className]} aria-label={label}>
+  <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close">
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+      <path d="M1 1L13 13M13 1L1 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+    </svg>
+  </button>
+  <div class="lightbox__content">
+    <slot />
+  </div>
+</dialog>
+
+<style>
+  .lightbox {
+    padding: 0;
+    border: none;
+    max-width: min(90vw, 48rem);
+    max-height: 90vh;
+    background: var(--canvas);
+    border-radius: var(--radius);
+  }
+
+  .lightbox::backdrop {
+    background: color-mix(in srgb, var(--ink) 80%, transparent);
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--canvas);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .lightbox__content {
+    display: flex;
+    max-height: 90vh;
+  }
+
+  .lightbox__content :global(img) {
+    width: 100%;
+    height: auto;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('dialog.lightbox').forEach((dialog) => {
+    if (!(dialog instanceof HTMLDialogElement)) return;
+
+    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+
+    // Backdrop click: the dialog element's own box is the backdrop area
+    // once its content no longer fills it, so a click target equal to the
+    // dialog itself means "outside the content."
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-lightbox-open]').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const id = trigger.getAttribute('data-lightbox-open');
+      const dialog = id ? document.getElementById(id) : null;
+      if (dialog instanceof HTMLDialogElement) dialog.showModal();
+    });
+  });
+</script>

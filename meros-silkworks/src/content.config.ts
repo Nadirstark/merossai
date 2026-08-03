@@ -12,7 +12,10 @@ import { glob, file } from 'astro/loaders';
  * Everything else is 1:1 with the doc.
  */
 
-const CATEGORIES = [
+// Exported so pages/components that need every category (category routes,
+// filter pills, breadcrumbs) share this one list instead of re-deriving it
+// from whatever products happen to exist.
+export const CATEGORIES = [
   'hair',
   'jewelry',
   'accessories',
@@ -20,6 +23,17 @@ const CATEGORIES = [
   'apparel',
   'custom',
 ] as const;
+
+export type Category = (typeof CATEGORIES)[number];
+
+export const CATEGORY_LABELS: Record<Category, string> = {
+  hair: 'Hair',
+  jewelry: 'Jewelry',
+  accessories: 'Accessories',
+  scarves: 'Scarves',
+  apparel: 'Apparel',
+  custom: 'Custom',
+};
 
 const products = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/products' }),
@@ -32,6 +46,10 @@ const products = defineCollection({
       // Required forever, not just Phase 1 — Etsy is permanent side-by-side
       // (decision #3). Phase 3 adds a second option; it never removes this.
       etsyUrl: z.string().url(),
+      // Drives the per-page --accent/--accent-ink CSS variables (§7). When
+      // unset, the page falls back to a rotating dye pool instead of a
+      // fixed brand color — the accent is pulled from the cloth, not fixed.
+      accent: z.object({ base: z.string(), deep: z.string() }).optional(),
       images: z
         .array(
           z.object({

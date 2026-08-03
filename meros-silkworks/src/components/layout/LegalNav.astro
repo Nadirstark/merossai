@@ -1,0 +1,53 @@
+---
+// §5 layout component. Footer legal links (§4.7).
+interface LegalLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  class?: string;
+}
+
+const links: LegalLink[] = [
+  { label: 'Shipping & Returns', href: '/shipping-returns' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
+];
+
+const { class: className } = Astro.props;
+---
+
+<ul class:list={['legal-nav', className]}>
+  {
+    links.map((link) => (
+      <li>
+        <a href={link.href} class="legal-nav__link">
+          {link.label}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .legal-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+  }
+
+  .legal-nav__link {
+    font-size: var(--text-xs);
+    color: var(--muted);
+    text-decoration: none;
+    transition: color var(--dur-1) var(--ease);
+  }
+
+  .legal-nav__link:hover,
+  .legal-nav__link:focus-visible {
+    color: var(--ink);
+  }
+</style>

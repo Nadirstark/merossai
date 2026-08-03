@@ -1,0 +1,79 @@
+---
+// §5 layout component. Logo + tagline + SocialLinks + newsletter slot +
+// LegalNav + copyright. NewsletterForm itself lives in forms/ (out of
+// scope here) and is passed in via the `newsletter` slot.
+import Logo from './Logo.astro';
+import SocialLinks from './SocialLinks.astro';
+import LegalNav from './LegalNav.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <Logo />
+      <p class="footer__tagline">Rooted in Tradition. Designed for now.</p>
+      <SocialLinks />
+    </div>
+    <div class="footer__newsletter">
+      <slot name="newsletter" />
+    </div>
+  </div>
+  <div class="footer__base">
+    <LegalNav />
+    <p class="footer__copyright">© {year} Meros Silkworks</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-24);
+  }
+
+  .footer__inner {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) var(--space-12);
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .footer__tagline {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    max-width: 28ch;
+  }
+
+  .footer__base {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-6) var(--page-pad);
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .footer__copyright {
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__inner {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+  }
+</style>

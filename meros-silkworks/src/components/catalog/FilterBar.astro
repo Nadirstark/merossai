@@ -1,0 +1,37 @@
+---
+// §5 catalog component. CategoryPills + SortSelect together (§4.2).
+import CategoryPills from './CategoryPills.astro';
+import SortSelect from './SortSelect.astro';
+
+interface Props {
+  activeCategory?: string;
+  sort?: string;
+  class?: string;
+}
+
+const { activeCategory, sort, class: className } = Astro.props;
+---
+
+<div class:list={['filter-bar', className]}>
+  <CategoryPills active={activeCategory} />
+  <SortSelect value={sort} />
+</div>
+
+<style>
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (min-width: 48rem) {
+    .filter-bar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+    }
+  }
+</style>

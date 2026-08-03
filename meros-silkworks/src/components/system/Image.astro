@@ -1,0 +1,39 @@
+---
+// §5 system component. Wraps astro:assets Image and applies the one
+// structural "bleed" motif (§7): a feathered mask-image fade at the image
+// boundary, sized by --feather, echoing the dye's own soft-shattered edge.
+import { Image } from 'astro:assets';
+import type { LocalImageProps, RemoteImageProps } from 'astro:assets';
+
+type Props = (LocalImageProps | RemoteImageProps) & {
+  class?: string;
+};
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['feathered', className]}>
+  <Image {...rest} />
+</span>
+
+<style>
+  .feathered {
+    display: block;
+    line-height: 0;
+  }
+
+  .feathered :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent, black var(--feather), black calc(100% - var(--feather)), transparent),
+      linear-gradient(to bottom, transparent, black var(--feather), black calc(100% - var(--feather)), transparent);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent, black var(--feather), black calc(100% - var(--feather)), transparent),
+      linear-gradient(to bottom, transparent, black var(--feather), black calc(100% - var(--feather)), transparent);
+    mask-composite: intersect;
+  }
+</style>

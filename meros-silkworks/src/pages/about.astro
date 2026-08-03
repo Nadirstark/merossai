@@ -1,0 +1,163 @@
+---
+// About — §4.4. First-person voice. The tagline, shop description, and
+// owner bio below are Saida's real words from her Etsy About section — not
+// placeholder copy. The four deeper story sections (what "meros" means,
+// growing up between NJ and Uzbek tradition, why she started, what she
+// wants the pieces to do) are still open content briefs per §4.4's list —
+// flagged individually rather than fabricated, and the page stays noindex
+// until those are filled in too.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/content/Hero.astro';
+import StoryBlock from '../components/content/StoryBlock.astro';
+import ImageBleed from '../components/system/Image.astro';
+import founderPlaceholder from '../assets/about/founder-placeholder.jpg';
+
+const products = await getCollection('products');
+const scarfProduct = products.find((product) => product.id === 'atlas-ikat-neck-scarf') ?? products[0];
+const heroImage = scarfProduct.data.images.find((image) => image.type === 'detail') ?? scarfProduct.data.images[0];
+---
+
+<BaseLayout
+  title="About — Meros Silkworks"
+  description="The story behind Meros Silkworks, in Saida's own words."
+  noindex
+>
+  <Hero image={heroImage.src} alt={heroImage.alt}>
+    <h1>About Meros</h1>
+    <p>Rooted in Tradition. Designed for now.</p>
+  </Hero>
+
+  <div class="page">
+    <div class="about">
+      <figure class="about__photo">
+        <ImageBleed
+          src={founderPlaceholder}
+          alt="[Placeholder — photo of Saida: her face, her hands at work, or her studio]"
+          width={900}
+          height={1125}
+        />
+        <figcaption class="about__photo-caption">
+          [Photo placeholder — face, hands, or workspace]
+        </figcaption>
+      </figure>
+
+      <div class="about__copy">
+        <p class="about__byline">Sagida (Saida / Sai)</p>
+
+        <p class="about__intro">
+          Hi! My name is Sagida, though most know me as Saida or Sai. I am absolutely elated to be
+          able to share my culture in modern spaces and bring you all along with me.
+        </p>
+
+        <StoryBlock title="Uzbek roots, worn every day">
+          <p>
+            Accessories honoring the diaspora that hope to connect culture with their everyday look.
+            Each piece is handmade and cared for with love, attention, and generations of
+            craftsmanship — Uzbek roots with a global spirit.
+          </p>
+        </StoryBlock>
+
+        <section class="about__section">
+          <h2>What "meros" means</h2>
+          <p class="page__flag">
+            [SAIDA TO REPLACE — a paragraph in your own words on what "meros" means to you and why it
+            became the name of the shop. This is the hook, so it should come first.]
+          </p>
+        </section>
+
+        <section class="about__section">
+          <h2>Between New Jersey and Uzbek tradition</h2>
+          <p class="page__flag">
+            [SAIDA TO REPLACE — how growing up between the two shaped what you make and how you think
+            about it.]
+          </p>
+        </section>
+
+        <section class="about__section">
+          <h2>Why I started</h2>
+          <p class="page__flag">
+            [SAIDA TO REPLACE — what led to the first piece, and to opening the shop.]
+          </p>
+        </section>
+
+        <section class="about__section">
+          <h2>What I want these pieces to do</h2>
+          <p class="page__flag">
+            [SAIDA TO REPLACE — what you hope someone feels wearing or gifting a piece from here.]
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) var(--space-24);
+  }
+
+  .about {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .about__photo {
+    max-width: 24rem;
+  }
+
+  .about__photo-caption {
+    margin-top: var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+  }
+
+  .about__byline {
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .about__intro {
+    margin-top: var(--space-3);
+    font-size: var(--text-lg);
+    max-width: var(--measure);
+  }
+
+  .about__copy > :global(.story-block) {
+    margin-top: var(--space-8);
+  }
+
+  .about__section {
+    margin-top: var(--space-8);
+  }
+
+  .about__section h2 {
+    font-size: var(--text-lg);
+  }
+
+  .page__flag {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 48rem) {
+    .about {
+      grid-template-columns: 24rem 1fr;
+      gap: var(--space-12);
+    }
+  }
+</style>

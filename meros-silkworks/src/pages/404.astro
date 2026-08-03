@@ -1,0 +1,74 @@
+---
+// 404 — §7 names this page explicitly as a use-case for the bleed motif.
+// There's no product photo to feather here, so the motif is reproduced
+// directly: a solid accent field with the same radial mask technique used
+// on real imagery elsewhere, scaled up into a purely decorative field.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/system/Button.astro';
+---
+
+<BaseLayout title="Page Not Found — Meros Silkworks" description="This page doesn't exist." noindex>
+  <div class="not-found">
+    <div class="not-found__bleed" aria-hidden="true"></div>
+    <p class="not-found__eyebrow">404</p>
+    <h1 class="not-found__title">This page unraveled.</h1>
+    <p class="not-found__body">
+      The page you're looking for isn't here — it may have moved, sold out, or never existed at all.
+    </p>
+    <div class="not-found__actions">
+      <Button href="/">Back to home</Button>
+      <Button href="/shop" variant="outline">Browse the shop</Button>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    position: relative;
+    max-width: var(--page-max);
+    min-height: 60vh;
+    margin-inline: auto;
+    padding: var(--space-24) var(--page-pad);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    overflow: hidden;
+  }
+
+  .not-found__bleed {
+    position: absolute;
+    top: var(--space-8);
+    right: var(--page-pad);
+    width: min(60vw, 24rem);
+    height: min(60vw, 24rem);
+    background: var(--accent);
+    -webkit-mask-image: radial-gradient(circle at center, black calc(100% - var(--feather) * 4), transparent 100%);
+    mask-image: radial-gradient(circle at center, black calc(100% - var(--feather) * 4), transparent 100%);
+    opacity: 0.5;
+    z-index: -1;
+  }
+
+  .not-found__eyebrow {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .not-found__title {
+    font-size: var(--text-display);
+  }
+
+  .not-found__body {
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+</style>

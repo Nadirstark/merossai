@@ -1,0 +1,28 @@
+---
+// §5 catalog component.
+interface Props {
+  price: number;
+  currency?: string;
+  class?: string;
+}
+
+const { price, currency = 'USD', class: className } = Astro.props;
+
+const formatted = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency,
+  minimumFractionDigits: price % 1 === 0 ? 0 : 2,
+}).format(price);
+---
+
+<span class:list={['price-tag', className]}>{formatted}</span>
+
+<style>
+  .price-tag {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: var(--tracking-caps);
+  }
+</style>

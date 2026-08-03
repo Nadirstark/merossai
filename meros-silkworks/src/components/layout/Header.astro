@@ -1,0 +1,30 @@
+---
+// §5 layout component. Logo + Nav.
+import Logo from './Logo.astro';
+import Nav from './Nav.astro';
+---
+
+<header class="header">
+  <div class="header__inner">
+    <Logo />
+    <Nav />
+  </div>
+</header>
+
+<style>
+  .header {
+    border-bottom: 1px solid var(--rule);
+    background: var(--canvas);
+  }
+
+  .header__inner {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-4) var(--page-pad);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+// Shop index — §4.2. All products, FilterBar + ProductGrid, empty-state
+// invites a custom request rather than showing nothing.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FilterBar from '../../components/catalog/FilterBar.astro';
+import ProductGrid from '../../components/catalog/ProductGrid.astro';
+import Button from '../../components/system/Button.astro';
+
+const products = (await getCollection('products')).sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+---
+
+<BaseLayout
+  title="Shop — Meros Silkworks"
+  description="Handmade accessories and apparel cut from handwoven Uzbek atlas ikat silk."
+>
+  <div class="page">
+    <header class="page__header">
+      <h1 class="page__title">Shop</h1>
+    </header>
+
+    <FilterBar />
+
+    {
+      products.length === 0 ? (
+        <div class="empty-state">
+          <p class="empty-state__message">
+            Everything's spoken for right now — check back soon, or let's make something new.
+          </p>
+          <Button href="/custom">Start a custom request</Button>
+        </div>
+      ) : (
+        <ProductGrid products={products} />
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding: var(--space-16) var(--page-pad) var(--space-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .page__title {
+    font-size: var(--text-display);
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-12) 0;
+  }
+
+  .empty-state__message {
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+</style>

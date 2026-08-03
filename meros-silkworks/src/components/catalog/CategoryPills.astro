@@ -1,0 +1,72 @@
+---
+// §5 catalog component. Categories per §4.2, links to the
+// /shop/category/[category] route (§3) + an "All" pill back to /shop.
+// The category list/labels come from content.config.ts — one source of
+// truth shared with the category route's getStaticPaths.
+import { CATEGORIES, CATEGORY_LABELS } from '../../content.config';
+
+interface Props {
+  active?: string;
+  class?: string;
+}
+
+const { active, class: className } = Astro.props;
+---
+
+<ul class:list={['category-pills', className]}>
+  <li>
+    <a href="/shop" class="category-pills__link" aria-current={!active ? 'page' : undefined}>
+      All
+    </a>
+  </li>
+  {
+    CATEGORIES.map((category) => (
+      <li>
+        <a
+          href={`/shop/category/${category}`}
+          class="category-pills__link"
+          aria-current={active === category ? 'page' : undefined}
+        >
+          {CATEGORY_LABELS[category]}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+
+  .category-pills__link {
+    display: inline-flex;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-1) var(--ease),
+      color var(--dur-1) var(--ease),
+      background-color var(--dur-1) var(--ease);
+  }
+
+  .category-pills__link:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .category-pills__link[aria-current='page'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--canvas);
+  }
+</style>

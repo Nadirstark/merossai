@@ -1,0 +1,35 @@
+---
+// §5 catalog component. `accent` variant is used for "One of a kind" on
+// ProductCard; `muted` is the quieter default for secondary status text.
+interface Props {
+  variant?: 'accent' | 'muted';
+  class?: string;
+}
+
+const { variant = 'muted', class: className } = Astro.props;
+---
+
+<span class:list={['badge', `badge--${variant}`, className]}><slot /></span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .badge--muted {
+    background: var(--rule);
+    color: var(--muted);
+  }
+
+  .badge--accent {
+    background: var(--accent);
+    color: var(--canvas);
+  }
+</style>

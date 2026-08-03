@@ -1,0 +1,101 @@
+---
+// §5 catalog component. Minimum 3 images per §4.3 — full product, on-body,
+// macro detail. Each thumbnail opens its own Lightbox instance on click.
+import ImageBleed from '../system/Image.astro';
+import Lightbox from './Lightbox.astro';
+
+interface GalleryImage {
+  src: ImageMetadata;
+  alt: string;
+  type: 'primary' | 'onbody' | 'detail';
+}
+
+interface Props {
+  images: GalleryImage[];
+  idPrefix?: string;
+  class?: string;
+}
+
+const { images, idPrefix = 'gallery', class: className } = Astro.props;
+const [main, ...rest] = images;
+---
+
+<div class:list={['gallery', className]}>
+  <button
+    type="button"
+    class="gallery__main"
+    data-lightbox-open={`${idPrefix}-0`}
+    aria-label={`View larger: ${main.alt}`}
+  >
+    <ImageBleed src={main.src} alt={main.alt} width={900} height={1125} class="gallery__image" />
+  </button>
+
+  {
+    rest.length > 0 && (
+      <div class="gallery__thumbs">
+        {rest.map((image, i) => (
+          <button
+            type="button"
+            class="gallery__thumb"
+            data-lightbox-open={`${idPrefix}-${i + 1}`}
+            aria-label={`View larger: ${image.alt}`}
+          >
+            <ImageBleed
+              src={image.src}
+              alt={image.alt}
+              width={400}
+              height={image.type === 'detail' ? 400 : 500}
+              class="gallery__image"
+            />
+          </button>
+        ))}
+      </div>
+    )
+  }
+</div>
+
+{
+  images.map((image, i) => (
+    <Lightbox id={`${idPrefix}-${i}`} label={image.alt}>
+      <ImageBleed src={image.src} alt={image.alt} width={1200} height={image.type === 'detail' ? 1200 : 1500} />
+    </Lightbox>
+  ))
+}
+
+<style>
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .gallery__main,
+  .gallery__thumb {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+
+  .gallery__main {
+    aspect-ratio: 4 / 5;
+  }
+
+  .gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .gallery__thumb {
+    aspect-ratio: 4 / 5;
+  }
+
+  .gallery__image {
+    width: 100%;
+    height: 100%;
+  }
+</style>

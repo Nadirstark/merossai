@@ -1,0 +1,67 @@
+---
+// §5 content component. Numbered step list for the Abrbandi process teaser
+// (§4.1). Copy is passed in, not owned by the component (§12: no
+// copywriting baked into architecture-level pieces).
+interface Step {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  steps: Step[];
+  class?: string;
+}
+
+const { steps, class: className } = Astro.props;
+---
+
+<ol class:list={['process-steps', className]}>
+  {
+    steps.map((step, i) => (
+      <li class="process-steps__item">
+        <span class="process-steps__number" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <h3 class="process-steps__title">{step.title}</h3>
+        <p class="process-steps__description">{step.description}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .process-steps {
+    display: grid;
+    gap: var(--space-8);
+    list-style: none;
+    padding: 0;
+  }
+
+  .process-steps__number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: var(--accent-ink);
+    margin-bottom: var(--space-2);
+  }
+
+  .process-steps__title {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--display-weight);
+  }
+
+  .process-steps__description {
+    margin-top: var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+
+  @media (min-width: 48rem) {
+    .process-steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+  }
+</style>

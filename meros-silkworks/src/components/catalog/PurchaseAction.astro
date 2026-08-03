@@ -1,0 +1,83 @@
+---
+// §4.3 "component slot note" + §1.1 + §11 decision #3 — READ BEFORE EDITING.
+//
+// This is the ONE isolated slot for a product's purchase path. It exists so
+// Phase 3 (adding a second checkout option — Stripe Payment Links, Shopify
+// Lite, whatever) can swap or extend *this file only*, without touching the
+// product page around it.
+//
+// The Etsy path must NEVER be removed. Decision #3 (§11) confirmed this is
+// a permanent side-by-side, not a migration off Etsy — `etsyUrl` stays a
+// required field on every product forever, and Phase 3 adds a second button
+// here, it does not replace this one.
+import Button from '../system/Button.astro';
+
+interface Props {
+  etsyUrl: string;
+  inStock: boolean;
+  title: string;
+  class?: string;
+}
+
+const { etsyUrl, inStock, title, class: className } = Astro.props;
+
+// UTM-tag the outbound link so Etsy traffic from the site is distinguishable
+// from other referrers in her shop stats (§8).
+const buyUrl = new URL(etsyUrl);
+buyUrl.searchParams.set('utm_source', 'merossilkworks_site');
+buyUrl.searchParams.set('utm_medium', 'referral');
+buyUrl.searchParams.set('utm_campaign', 'product_page');
+---
+
+<div class:list={['purchase-action', className]}>
+  {
+    inStock ? (
+      <Button href={buyUrl.href} variant="solid" class="purchase-action__cta">
+        Buy on Etsy<span class="sr-only"> — {title}</span>
+      </Button>
+    ) : (
+      <div class="purchase-action__made-to-order">
+        <p class="purchase-action__note">Made to order — this piece isn't currently in stock.</p>
+        <Button href="/custom" variant="outline" class="purchase-action__cta">
+          Start a custom request<span class="sr-only"> for {title}</span>
+        </Button>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .purchase-action {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .purchase-action__cta {
+    align-self: flex-start;
+  }
+
+  .purchase-action__made-to-order {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .purchase-action__note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+// §4.1 base shell: global styles + Header + <main><slot /></main> + Footer.
+// The footer's newsletter slot is wired here (compact variant) so every
+// page gets it for free instead of repeating it per page.
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import NewsletterForm from '../components/forms/NewsletterForm.astro';
+import SEOHead from '../components/system/SEOHead.astro';
+import StructuredData from '../components/system/StructuredData.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description, image, noindex = false, structuredData } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <SEOHead title={title} description={description} image={image} />
+    {structuredData && <StructuredData data={structuredData} />}
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer>
+      <NewsletterForm slot="newsletter" compact />
+    </Footer>
+  </body>
+</html>
