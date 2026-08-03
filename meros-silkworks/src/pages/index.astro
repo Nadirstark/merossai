@@ -11,15 +11,11 @@ import InstagramStrip from '../components/content/InstagramStrip.astro';
 import ProductGrid from '../components/catalog/ProductGrid.astro';
 import Button from '../components/system/Button.astro';
 import NewsletterForm from '../components/forms/NewsletterForm.astro';
+import heroImage from '../assets/hero/isbl_3360x840.78709882_qa4r09ek.jpg';
 
 const products = await getCollection('products');
 const featuredProducts = products.filter((product) => product.data.featured);
 const reviews = await getCollection('reviews');
-
-// Lead with the fabric (§4.1): the macro "detail" shot of whichever
-// featured piece has one, not a model.
-const heroProduct = featuredProducts.find((product) => product.data.images.some((image) => image.type === 'detail')) ?? products[0];
-const heroImage = heroProduct.data.images.find((image) => image.type === 'detail') ?? heroProduct.data.images[0];
 
 // Instagram strip: curated placeholders until real photography and post
 // links land (§11 decision #7) — every tile points at the profile itself
@@ -62,7 +58,7 @@ const structuredData = [
   description="Handmade accessories and apparel cut from handwoven Uzbek atlas ikat silk — hair ties to custom wedding pieces, made by hand in New Jersey."
   structuredData={structuredData}
 >
-  <Hero image={heroImage.src} alt={heroImage.alt}>
+  <Hero image={heroImage} alt="A silver atlas ikat scrunchie on a marble plate, with striped ikat silk fabric in the background">
     <h1>Meros Silkworks</h1>
     <p>Rooted in Tradition. Designed for now.</p>
   </Hero>
