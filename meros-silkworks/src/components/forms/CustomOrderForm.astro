@@ -3,7 +3,6 @@
 // revenue line (§11 decision #6), so the turnaround-time note sits visibly
 // next to submit rather than buried in copy — nothing kills an inquiry
 // faster than not knowing if 3 weeks or 3 months is normal.
-// action="#" is a placeholder — the real form backend is a Phase 2 decision.
 import Button from '../system/Button.astro';
 
 interface Props {
@@ -14,9 +13,13 @@ const { class: className } = Astro.props;
 
 const PIECE_TYPES = ['Baska', 'Vest', 'Scarf', 'Hair accessory', 'Other'];
 const BUDGET_RANGES = ['Under $50', '$50–$100', '$100–$200', '$200+'];
+
+// TODO(Saida): swap YOUR_FORM_ID for the real Formspree form ID once the
+// account is created — this is the only line that needs to change.
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 ---
 
-<form class:list={['custom-form', className]} action="#" method="post" enctype="multipart/form-data">
+<form class:list={['custom-form', className]} action={FORMSPREE_ENDPOINT} method="post" enctype="multipart/form-data">
   <div class="field">
     <label for="custom-name" class="field__label">Name</label>
     <input id="custom-name" name="name" type="text" autocomplete="name" required class="field__input" />

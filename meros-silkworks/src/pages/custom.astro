@@ -1,20 +1,13 @@
 ---
 // Custom — §4.6. Confirmed P0 revenue line, so this page gets the same
-// production weight as a product page: a real intro, a gallery (placeholder
-// until real past work is available), turnaround expectations stated up
-// front, and the full form.
+// production weight as a product page: a real intro, turnaround
+// expectations stated up front, and the full form.
+//
+// The "past custom pieces" gallery is deliberately omitted rather than
+// filled with placeholder imagery — it goes back in once real photos of
+// past work exist (see ARCHITECTURE.md §4.6).
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ImageBleed from '../components/system/Image.astro';
 import CustomOrderForm from '../components/forms/CustomOrderForm.astro';
-import pastPiece1 from '../assets/custom/past-piece-1.jpg';
-import pastPiece2 from '../assets/custom/past-piece-2.jpg';
-import pastPiece3 from '../assets/custom/past-piece-3.jpg';
-
-const pastPieces = [
-  { image: pastPiece1, alt: '[Placeholder — past custom piece, swap for a real photo]' },
-  { image: pastPiece2, alt: '[Placeholder — past custom piece, swap for a real photo]' },
-  { image: pastPiece3, alt: '[Placeholder — past custom piece, swap for a real photo]' },
-];
 ---
 
 <BaseLayout
@@ -32,26 +25,6 @@ const pastPieces = [
         hand.
       </p>
     </header>
-
-    <section class="past-pieces">
-      <h2 class="section__heading">Past custom pieces</h2>
-      <p class="past-pieces__note">
-        [PLACEHOLDER — swap in real photos of past custom work once available]
-      </p>
-      <div class="past-pieces__grid">
-        {
-          pastPieces.map((piece) => (
-            <ImageBleed
-              src={piece.image}
-              alt={piece.alt}
-              width={500}
-              height={625}
-              class="past-pieces__image"
-            />
-          ))
-        }
-      </div>
-    </section>
 
     <section class="custom-form-section">
       <h2 class="section__heading">Start your request</h2>
@@ -90,23 +63,6 @@ const pastPieces = [
 
   .section__heading {
     font-size: var(--text-h2);
-  }
-
-  .past-pieces__note {
-    margin-top: var(--space-2);
-    color: var(--muted);
-    font-size: var(--text-sm);
-  }
-
-  .past-pieces__grid {
-    margin-top: var(--space-6);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
-  }
-
-  .past-pieces__image {
-    aspect-ratio: 4 / 5;
   }
 
   .custom-form-section {

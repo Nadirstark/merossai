@@ -1,6 +1,5 @@
 ---
 // §5 forms component. Name/email/message + response-time note (§4.7).
-// action="#" is a placeholder — the real form backend is a Phase 2 decision.
 import Button from '../system/Button.astro';
 
 interface Props {
@@ -8,9 +7,13 @@ interface Props {
 }
 
 const { class: className } = Astro.props;
+
+// TODO(Saida): swap YOUR_FORM_ID for the real Formspree form ID once the
+// account is created — this is the only line that needs to change.
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 ---
 
-<form class:list={['contact-form', className]} action="#" method="post">
+<form class:list={['contact-form', className]} action={FORMSPREE_ENDPOINT} method="post">
   <div class="field">
     <label for="contact-name" class="field__label">Name</label>
     <input id="contact-name" name="name" type="text" autocomplete="name" required class="field__input" />

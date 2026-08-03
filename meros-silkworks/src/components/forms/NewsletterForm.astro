@@ -1,7 +1,6 @@
 ---
 // §5 forms component. Single email field (§4.1). `compact` is the
 // shorter variant for the Footer's `newsletter` slot (§5 Footer).
-// action="#" is a placeholder — the real ESP is a Phase 2 decision (§1.3).
 import Button from '../system/Button.astro';
 
 interface Props {
@@ -11,9 +10,16 @@ interface Props {
 
 const { compact = false, class: className } = Astro.props;
 const fieldId = compact ? 'newsletter-email-compact' : 'newsletter-email';
+
+// TODO(Saida): swap YOUR_FORM_ID for the real Formspree form ID once the
+// account is created — this is the only line that needs to change.
+// Note: a real ESP (Buttondown/ConvertKit, per §1.3/§8) may replace this
+// later so new-piece announcements can be sent from a proper list — this
+// Formspree endpoint just makes the signup actually capture emails now.
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 ---
 
-<form class:list={['newsletter', compact && 'newsletter--compact', className]} action="#" method="post">
+<form class:list={['newsletter', compact && 'newsletter--compact', className]} action={FORMSPREE_ENDPOINT} method="post">
   {!compact && <p class="newsletter__copy">New pieces and restocks. A few times a year.</p>}
   <div class="newsletter__row">
     <label for={fieldId} class:list={['newsletter__label', compact && 'sr-only']}>Email</label>
