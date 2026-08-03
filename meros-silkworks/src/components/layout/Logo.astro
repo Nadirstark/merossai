@@ -1,5 +1,10 @@
 ---
-// §5 layout component. Text wordmark — no logotype asset exists yet.
+// §5 layout component. Real hand-drawn wordmark (replaces the former text
+// logotype now that Saida's actual logo file exists). The image sits on a
+// white background; --canvas is near-white too, so no visible seam.
+import { Image } from 'astro:assets';
+import logoImage from '../../assets/logo/meros-logo.png';
+
 interface Props {
   class?: string;
 }
@@ -8,39 +13,31 @@ const { class: className } = Astro.props;
 ---
 
 <a href="/" class:list={['logo', className]} aria-label="Meros Silkworks — home">
-  <span class="logo__brand">Meros</span>
-  <span class="logo__mark">Silkworks</span>
+  <Image src={logoImage} alt="" width={936} height={581} loading="eager" class="logo__image" />
 </a>
 
 <style>
   .logo {
     display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-1);
-    font-family: var(--font-display);
-    font-weight: var(--display-weight);
-    font-variation-settings: var(--display-variation);
-    font-size: var(--text-lg);
-    letter-spacing: var(--tracking-display);
-    color: var(--ink);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color var(--dur-1) var(--ease);
+    align-items: center;
+    line-height: 0;
+    transition: opacity var(--dur-1) var(--ease);
   }
 
-  .logo__mark {
-    color: var(--muted);
-    font-weight: 400;
-    transition: color var(--dur-1) var(--ease);
+  .logo__image {
+    display: block;
+    height: 36px;
+    width: auto;
   }
 
   .logo:hover,
   .logo:focus-visible {
-    color: var(--accent-ink);
+    opacity: 0.7;
   }
 
-  .logo:hover .logo__mark,
-  .logo:focus-visible .logo__mark {
-    color: var(--accent-ink);
+  @media (max-width: 26rem) {
+    .logo__image {
+      height: 30px;
+    }
   }
 </style>
