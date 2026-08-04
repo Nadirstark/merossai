@@ -135,22 +135,23 @@ const multi = images.length > 1;
     right: var(--space-3);
   }
 
-  /* Every box from here down to the image has a *definite* size (not
-     shrink-to-fit auto) — that's deliberate. An img with width/height:auto
-     nested inside auto-sized flex wrappers has no definite box to resolve
-     percentages against and can collapse to 0×0; position:absolute + inset
-     against the fixed-size dialog guarantees a real number at every level,
-     which is what lets object-fit:contain center any aspect ratio cleanly. */
+  /* The stage/slide/zoom chain is all shrink-to-fit (no forced 100%
+     boxes) so the light "zoom" container hugs whatever size the image
+     actually ends up rendered at, rather than sitting oversized around a
+     smaller centered photo. Centering happens by flexing the *stage*,
+     not by giving each box a fixed size to center within. */
   .lightbox__stage {
-    position: relative;
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .lightbox__slide {
-    position: absolute;
-    inset: var(--space-12) clamp(4.5rem, 10vw, 7rem);
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .lightbox__slide[hidden] {
@@ -159,29 +160,29 @@ const multi = images.length > 1;
 
   .lightbox__zoom {
     position: relative;
-    width: 100%;
-    height: 100%;
+    display: inline-flex;
     overflow: hidden;
     background: var(--canvas);
     border-radius: var(--radius);
+    padding: var(--space-3);
   }
 
   /* The img carries width/height HTML attributes that don't match its
      true rendered aspect ratio (Astro requests a specific crop size, the
-     source doesn't always match it 1:1), giving it a UA-derived
-     aspect-ratio. For an absolutely positioned *replaced* element, if
-     width/height compute to auto, the used size falls back to that
-     intrinsic ratio regardless of inset — position:absolute + inset alone
-     was silently ignored for sizing, only affecting placement, which let
-     the image overflow its box and get cropped by overflow:hidden. Giving
-     width/height explicit non-auto values (matching the inset via calc,
-     not percentages of a padded box) sidesteps that fallback entirely. */
+     source doesn't always match it 1:1). Setting width/height to auto
+     here overrides the UA's attribute-derived box and falls back to the
+     image's real intrinsic ratio, so max-width/max-height (in viewport
+     units, not percentages of an auto-sized ancestor) is what bounds it —
+     the img's own box ends up matching the real photo, and the zoom
+     wrapper's inline-flex shrink-wraps tightly around that plus its
+     padding. object-fit:contain stays as a safety net for the rare case
+     the ratio mismatch is severe enough to matter before that resolves. */
   .lightbox__zoom :global([data-lightbox-img]) {
     display: block;
-    position: absolute;
-    inset: var(--space-3);
-    width: calc(100% - 2 * var(--space-3));
-    height: calc(100% - 2 * var(--space-3));
+    width: auto;
+    height: auto;
+    max-width: calc(100vw - 2 * clamp(4.5rem, 10vw, 7rem) - 2 * var(--space-3));
+    max-height: calc(100vh - 2 * var(--space-12) - 2 * var(--space-3));
     object-fit: contain;
     cursor: zoom-in;
     transition: transform var(--dur-2) var(--ease);
@@ -207,8 +208,9 @@ const multi = images.length > 1;
   }
 
   @media (max-width: 26rem) {
-    .lightbox__slide {
-      inset: var(--space-8) clamp(3rem, 15vw, 3.75rem);
+    .lightbox__zoom :global([data-lightbox-img]) {
+      max-width: calc(100vw - 2 * clamp(3rem, 15vw, 3.75rem) - 2 * var(--space-3));
+      max-height: calc(100vh - 2 * var(--space-8) - 2 * var(--space-3));
     }
 
     .lightbox__arrow {
