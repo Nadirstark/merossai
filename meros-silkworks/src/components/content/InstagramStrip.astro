@@ -53,14 +53,18 @@ const { posts, handle = 'merossilkworks', class: className } = Astro.props;
     border-radius: var(--radius);
   }
 
-  .instagram-strip__image {
+  /* :global() required — ImageBleed renders this element in its own
+     scoped boundary, so a bare selector never reaches it (the image was
+     rendering at its native aspect ratio instead of filling the square
+     tile, getting clipped unevenly by the parent's overflow:hidden). */
+  .instagram-strip__item :global(.instagram-strip__image) {
     width: 100%;
     height: 100%;
     transition: opacity var(--dur-1) var(--ease);
   }
 
-  .instagram-strip__item:hover .instagram-strip__image,
-  .instagram-strip__item:focus-visible .instagram-strip__image {
+  .instagram-strip__item:hover :global(.instagram-strip__image),
+  .instagram-strip__item:focus-visible :global(.instagram-strip__image) {
     opacity: 0.85;
   }
 

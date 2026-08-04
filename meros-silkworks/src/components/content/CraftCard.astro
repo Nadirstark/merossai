@@ -39,7 +39,9 @@ const formattedDate = publishedAt.toLocaleDateString('en-US', { month: 'long', y
     background: var(--rule);
   }
 
-  .craft-card__image {
+  /* :global() required — ImageBleed renders this element in its own
+     scoped boundary, so a bare selector never reaches it. */
+  .craft-card__media :global(.craft-card__image) {
     width: 100%;
     height: 100%;
   }

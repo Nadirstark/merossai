@@ -65,6 +65,7 @@ const structuredData = [
 
   <div class="page">
     <section class="section" aria-labelledby="featured-heading">
+      <p class="section__eyebrow">Shop</p>
       <h2 id="featured-heading" class="section__heading">Featured pieces</h2>
       <ProductGrid products={featuredProducts} />
     </section>
@@ -96,7 +97,7 @@ const structuredData = [
     </section>
 
     <section class="section cta-custom">
-      <p class="cta-custom__eyebrow">Custom Orders</p>
+      <p class="section__eyebrow">Custom Orders</p>
       <h2 class="cta-custom__title">Wedding or event piece? Let's talk.</h2>
       <p class="cta-custom__body">
         The Baska skirt started as a custom order — so have most of the wedding and event pieces made
@@ -110,6 +111,7 @@ const structuredData = [
     {
       reviews.length > 0 && (
         <section class="section" aria-labelledby="reviews-heading">
+          <p class="section__eyebrow">Reviews</p>
           <h2 id="reviews-heading" class="section__heading">
             What people are saying
           </h2>
@@ -123,11 +125,13 @@ const structuredData = [
     }
 
     <section class="section" aria-labelledby="instagram-heading">
+      <p class="section__eyebrow">Follow Along</p>
       <h2 id="instagram-heading" class="section__heading">On Instagram</h2>
       <InstagramStrip posts={instagramPosts} />
     </section>
 
     <section class="section" aria-labelledby="newsletter-heading">
+      <p class="section__eyebrow">Newsletter</p>
       <h2 id="newsletter-heading" class="section__heading">Stay in the loop</h2>
       <NewsletterForm />
     </section>
@@ -142,6 +146,14 @@ const structuredData = [
     display: flex;
     flex-direction: column;
     gap: var(--space-24);
+  }
+
+  .section__eyebrow {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: var(--space-2);
   }
 
   .section__heading {
@@ -168,14 +180,6 @@ const structuredData = [
     padding: var(--space-8);
     border-radius: var(--radius);
     background: color-mix(in srgb, var(--accent) 12%, var(--canvas));
-  }
-
-  .cta-custom__eyebrow {
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
-    color: var(--accent-ink);
-    margin-bottom: var(--space-2);
   }
 
   .cta-custom__title {

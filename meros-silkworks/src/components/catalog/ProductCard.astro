@@ -70,7 +70,12 @@ const accentStyle = accent ? `--accent: ${accent.base}; --accent-ink: ${accent.d
     background: var(--rule);
   }
 
-  .product-card__image {
+  /* :global() required throughout this block — ImageBleed renders these
+     elements inside its own scoped style boundary, so bare selectors here
+     never matched them. Without it every rule below was dead: both images
+     sat in normal flow (the second clipped away by overflow:hidden) and
+     the hover crossfade never ran at all. */
+  .product-card__media :global(.product-card__image) {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -78,26 +83,32 @@ const accentStyle = accent ? `--accent: ${accent.base}; --accent-ink: ${accent.d
     transition: opacity var(--dur-2) var(--ease);
   }
 
-  .product-card__image--primary {
+  .product-card__media :global(.product-card__image--primary) {
     opacity: 1;
   }
 
-  .product-card__image--hover {
+  .product-card__media :global(.product-card__image--hover) {
     opacity: 0;
   }
 
-  .product-card:hover .product-card__image--hover,
-  .product-card:focus-visible .product-card__image--hover {
+  .product-card:hover .product-card__media :global(.product-card__image--hover),
+  .product-card:focus-visible .product-card__media :global(.product-card__image--hover) {
     opacity: 1;
   }
 
-  .product-card:hover .product-card__image--primary,
-  .product-card:focus-visible .product-card__image--primary {
+  .product-card:hover .product-card__media :global(.product-card__image--primary),
+  .product-card:focus-visible .product-card__media :global(.product-card__image--primary) {
     opacity: 0;
   }
 
-  .product-card__badge {
+  /* :global() is required here: Badge renders this element inside its own
+     scoped style boundary, so a bare `.product-card__badge` selector in
+     ProductCard's scope never matches it — the badge silently stayed
+     static-positioned (and invisible, painted under the cover images)
+     until this was added. */
+  .product-card__media :global(.product-card__badge) {
     position: absolute;
+    z-index: 1;
     top: var(--space-3);
     left: var(--space-3);
   }

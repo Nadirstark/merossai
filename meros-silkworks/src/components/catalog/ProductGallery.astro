@@ -130,7 +130,12 @@ const main = images[0];
     box-shadow: var(--focus-ring);
   }
 
-  .gallery__image {
+  /* :global() required — ImageBleed renders this element in its own
+     scoped boundary. Harmless no-op today (plain block boxes fill their
+     container's width by default, so sizing looks right by coincidence),
+     but written correctly rather than left as dead, misleading CSS. */
+  .gallery__main :global(.gallery__image),
+  .gallery__thumb :global(.gallery__image) {
     width: 100%;
     height: 100%;
   }

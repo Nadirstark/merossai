@@ -6,9 +6,12 @@
    photography. The accent is never a fixed brand color — it is reassigned
    per page from the featured piece's dominant dye.
 
-   NOTE: the dye pool below is PROVISIONAL. Values are re-sampled against
-   Saida's real product photography when it lands (decision #7, §12).
-   Canvas/ink/type/space are final unless flagged in review.
+   NOTE: magenta (the default --accent, used until a product sets its own)
+   has been re-sampled against the real logo + product photography
+   (decision #7, §12) — see the dye pool comment below. Emerald/indigo/
+   cadmium are untouched: the anti-brief's saturated-dye reasoning still
+   holds for those, they're just not live anywhere yet (no product sets
+   a custom accent today). Canvas/ink/type/space are final.
    ========================================================================== */
 
 :root {
@@ -21,10 +24,17 @@
   /* ---- dye pool (atlas dyes) ------------------------------------------
      base  = fills, marks, hover washes, large graphics
      -deep = text, links, focus — every -deep passes AA on --canvas
-     (magenta 5.3→8.4 · emerald 5.0→7.7 · indigo 9.5→12.1 · cadmium ✗→6.1)
-     Cadmium base is the one dye that may never carry text. */
-  --dye-magenta: #c6157c;
-  --dye-magenta-deep: #8f0e58;
+     (magenta 5.7→8.9 · emerald 5.0→7.7 · indigo 9.5→12.1 · cadmium ✗→6.1)
+     Cadmium base is the one dye that may never carry text.
+
+     "magenta" is now sampled from the real brand mark and photography
+     rather than provisional: -deep is the wine/burgundy pulled directly
+     from the logo's ribbon (avg. of its solid pixels, #87193c), base is
+     the same hue brightened for fills. Kept the token name for stability
+     — every consumer references --accent/--accent-ink, never this name
+     directly, so nothing downstream needed to change. */
+  --dye-magenta: #bd2354;
+  --dye-magenta-deep: #87193c;
   --dye-emerald: #0e7c4a;
   --dye-emerald-deep: #0a5c37;
   --dye-indigo: #2e3a8c;
