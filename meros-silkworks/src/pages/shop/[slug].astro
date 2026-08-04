@@ -152,6 +152,16 @@ const structuredData = [
     gap: var(--space-8);
   }
 
+  /* Grid items default to min-width:auto, which floors them at their
+     content's min-content size instead of letting them shrink to the
+     track width — the classic cause of a grid column quietly overflowing
+     the viewport. Both columns hold flexible content (the gallery's image
+     stage, wrapping text), so neither needs that floor. */
+  .product__gallery,
+  .product__details {
+    min-width: 0;
+  }
+
   .product__title {
     font-size: var(--text-h2);
   }

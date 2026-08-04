@@ -23,8 +23,14 @@ import Nav from './Nav.astro';
     padding: var(--space-6) var(--page-pad);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
+    /* Logo + nav are clustered together with a fixed gap rather than
+       pushed to opposite edges via space-between: at wide viewports the
+       combined content is far narrower than page-max, so space-between
+       left one enormous, unanchored gap between them. Any leftover width
+       now collects on the right instead, which reads as intentional
+       whitespace rather than a broken middle gap. */
+    justify-content: flex-start;
+    gap: var(--space-12);
     flex-wrap: wrap;
   }
 </style>

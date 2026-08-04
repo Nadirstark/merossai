@@ -162,16 +162,26 @@ const multi = images.length > 1;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    padding: var(--space-3);
-    box-sizing: border-box;
     background: var(--canvas);
     border-radius: var(--radius);
   }
 
+  /* The img carries width/height HTML attributes that don't match its
+     true rendered aspect ratio (Astro requests a specific crop size, the
+     source doesn't always match it 1:1), giving it a UA-derived
+     aspect-ratio. For an absolutely positioned *replaced* element, if
+     width/height compute to auto, the used size falls back to that
+     intrinsic ratio regardless of inset — position:absolute + inset alone
+     was silently ignored for sizing, only affecting placement, which let
+     the image overflow its box and get cropped by overflow:hidden. Giving
+     width/height explicit non-auto values (matching the inset via calc,
+     not percentages of a padded box) sidesteps that fallback entirely. */
   .lightbox__zoom :global([data-lightbox-img]) {
     display: block;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: var(--space-3);
+    width: calc(100% - 2 * var(--space-3));
+    height: calc(100% - 2 * var(--space-3));
     object-fit: contain;
     cursor: zoom-in;
     transition: transform var(--dur-2) var(--ease);
