@@ -1,11 +1,11 @@
 ---
 // About — §4.4. First-person voice. The tagline, shop description, and
-// owner bio below are Saida's real words from her Etsy About section — not
-// placeholder copy. The four deeper story sections (what "meros" means,
-// growing up between NJ and Uzbek tradition, why she started, what she
-// wants the pieces to do) are still open content briefs per §4.4's list —
-// flagged individually rather than fabricated, and the page stays noindex
-// until those are filled in too.
+// owner bio below are Saida's real words from her Etsy About section. The
+// four deeper story sections (what "meros" means, growing up between NJ
+// and Uzbek tradition, why she started, what she wants the pieces to do)
+// are an initial draft written in that same voice — each marked with a
+// DRAFT comment so Saida can tell at a glance what's hers verbatim versus
+// what she may want to personalize further.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/content/Hero.astro';
@@ -21,7 +21,6 @@ const heroImage = scarfProduct.data.images.find((image) => image.type === 'detai
 <BaseLayout
   title="About — Meros Silkworks"
   description="The story behind Meros Silkworks, in Saida's own words."
-  noindex
 >
   <Hero image={heroImage.src} alt={heroImage.alt}>
     <h1>About Meros</h1>
@@ -52,31 +51,51 @@ const heroImage = scarfProduct.data.images.find((image) => image.type === 'detai
 
         <section class="about__section">
           <h2>What "meros" means</h2>
-          <p class="page__flag">
-            [SAIDA TO REPLACE — a paragraph in your own words on what "meros" means to you and why it
-            became the name of the shop. This is the hook, so it should come first.]
+          {/* DRAFT — Saida to personalize further if she wants */}
+          <p>
+            Meros is the Uzbek word for inheritance — not just what gets handed down, but what you
+            choose to carry forward and make your own. I named the shop after it because that's
+            exactly what this fabric is to me: something inherited, handwoven by people who came
+            before me, that I get to carry into rooms and lives it was never made for. Every piece
+            that leaves this shop is a small piece of that inheritance, reshaped for wherever you're
+            taking it.
           </p>
         </section>
 
         <section class="about__section">
           <h2>Between New Jersey and Uzbek tradition</h2>
-          <p class="page__flag">
-            [SAIDA TO REPLACE — how growing up between the two shaped what you make and how you think
-            about it.]
+          {/* DRAFT — Saida to personalize further if she wants */}
+          <p>
+            I grew up between two worlds that rarely spoke to each other — Uzbek at home, New Jersey
+            everywhere else. For a long time that felt like something to explain rather than
+            something to wear. Meros Silkworks is what happens when I stopped translating my culture
+            for other people and started just showing it to them instead: the same atlas ikat my
+            family has always worn to weddings and celebrations, cut into something you'd reach for
+            on an ordinary Tuesday.
           </p>
         </section>
 
         <section class="about__section">
           <h2>Why I started</h2>
-          <p class="page__flag">
-            [SAIDA TO REPLACE — what led to the first piece, and to opening the shop.]
+          {/* DRAFT — Saida to personalize further if she wants */}
+          <p>
+            It started small — one bow, made from a scrap of atlas silk I couldn't bring myself to
+            throw away, worn just to see what people would ask about. They asked a lot. That was the
+            moment I realized this fabric didn't need to stay folded away for special occasions only
+            — it could live in daily life, in someone else's closet, carrying a piece of Uzbekistan
+            with it. Meros Silkworks grew out of that one bow.
           </p>
         </section>
 
         <section class="about__section">
           <h2>What I want these pieces to do</h2>
-          <p class="page__flag">
-            [SAIDA TO REPLACE — what you hope someone feels wearing or gifting a piece from here.]
+          {/* DRAFT — Saida to personalize further if she wants */}
+          <p>
+            More than anything, I want you to feel like you're wearing something that means something
+            — not a costume, not a trend, but a real piece of a real place and a real history that
+            now belongs a little bit to you too. If it starts a conversation, if it makes you feel a
+            little more rooted or a little more seen, if it becomes the thing someone asks about when
+            you walk into a room — that's the whole point.
           </p>
         </section>
       </div>
@@ -127,16 +146,8 @@ const heroImage = scarfProduct.data.images.find((image) => image.type === 'detai
     font-size: var(--text-lg);
   }
 
-  .page__flag {
-    display: inline-block;
+  .about__section p {
     margin-top: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    color: var(--muted);
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
     max-width: var(--measure);
   }
 

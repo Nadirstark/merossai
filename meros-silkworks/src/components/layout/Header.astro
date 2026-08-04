@@ -1,18 +1,42 @@
 ---
-// §5 layout component. Logo + Nav.
+// §5 layout component. Logo + Nav, plus a mobile hamburger toggle that
+// collapses the 5 nav links into a full-screen overlay below ~640px.
+// Nav.astro itself is untouched — the toggle button and the mobile
+// overlay treatment live entirely in this component's CSS/JS, reaching
+// into Nav's rendered markup via :global() (same pattern ProductCard and
+// Lightbox already use to style another component's internals), so the
+// desktop nav's file, markup, and behavior stay exactly as they were.
 import Logo from './Logo.astro';
 import Nav from './Nav.astro';
 ---
 
-<header class="header">
+<header class="header" data-header>
   <div class="header__inner">
     <Logo />
-    <Nav />
+    <button
+      type="button"
+      class="header__toggle"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="primary-nav"
+      aria-label="Open menu"
+    >
+      <svg class="header__icon header__icon--open" width="20" height="14" viewBox="0 0 20 14" aria-hidden="true" focusable="false">
+        <path d="M0 1H20M0 7H20M0 13H20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <svg class="header__icon header__icon--close" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M1 1L15 15M15 1L1 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+    <div id="primary-nav" class="header__nav">
+      <Nav />
+    </div>
   </div>
 </header>
 
 <style>
   .header {
+    position: relative;
     border-bottom: 1px solid var(--rule);
     background: var(--canvas);
   }
@@ -33,4 +57,102 @@ import Nav from './Nav.astro';
     gap: var(--space-12);
     flex-wrap: wrap;
   }
+
+  /* Wrapper exists only to give the toggle button an aria-controls target
+     — display:contents removes it from layout entirely so Nav is still a
+     direct flex child of .header__inner, identical to before this file
+     had a toggle at all. */
+  .header__nav {
+    display: contents;
+  }
+
+  .header__toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-left: auto;
+    border: none;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .header__icon--close {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    .header__toggle {
+      display: inline-flex;
+    }
+
+    .header__inner :global(.nav) {
+      display: none;
+    }
+
+    .header.is-nav-open .header__toggle {
+      position: fixed;
+      top: var(--space-3);
+      right: var(--page-pad);
+      z-index: 3;
+      background: var(--canvas);
+    }
+
+    .header.is-nav-open .header__icon--open {
+      display: none;
+    }
+
+    .header.is-nav-open .header__icon--close {
+      display: block;
+    }
+
+    .header.is-nav-open .header__inner :global(.nav) {
+      display: flex;
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      background: var(--canvas);
+      padding: var(--space-16) var(--page-pad);
+      overflow-y: auto;
+    }
+
+    .header.is-nav-open .header__inner :global(.nav__list) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+      overflow: visible;
+    }
+
+    .header.is-nav-open .header__inner :global(.nav__link) {
+      padding: var(--space-3) 0;
+      font-size: var(--text-lg);
+    }
+  }
 </style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+
+  const setOpen = (open: boolean) => {
+    if (!header || !toggle) return;
+    header.classList.toggle('is-nav-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  };
+
+  toggle?.addEventListener('click', () => {
+    setOpen(!header?.classList.contains('is-nav-open'));
+  });
+
+  header?.querySelectorAll('.nav__link').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && header?.classList.contains('is-nav-open')) setOpen(false);
+  });
+</script>

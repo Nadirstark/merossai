@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { product, class: className } = Astro.props;
-const { title, price, currency, images, isOneOfAKind, accent } = product.data;
+const { title, price, currency, images, isOneOfAKind, inStock, accent } = product.data;
 
 const primaryImage = images.find((image) => image.type === 'primary') ?? images[0];
 const hoverImage = images.find((image) => image !== primaryImage) ?? primaryImage;
@@ -48,7 +48,13 @@ const accentStyle = accent ? `--accent: ${accent.base}; --accent-ink: ${accent.d
   </span>
   <span class="product-card__meta">
     <span class="product-card__title">{title}</span>
-    <PriceTag price={price} currency={currency} />
+    {
+      inStock ? (
+        <PriceTag price={price} currency={currency} />
+      ) : (
+        <Badge variant="muted">Made to order</Badge>
+      )
+    }
   </span>
 </a>
 
