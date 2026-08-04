@@ -24,7 +24,8 @@ const [main, ...rest] = images;
   <button
     type="button"
     class="gallery__main"
-    data-lightbox-open={`${idPrefix}-0`}
+    data-lightbox-open={idPrefix}
+    data-lightbox-index="0"
     aria-label={`View larger: ${main.alt}`}
   >
     <ImageBleed src={main.src} alt={main.alt} width={900} height={1125} class="gallery__image" />
@@ -37,7 +38,8 @@ const [main, ...rest] = images;
           <button
             type="button"
             class="gallery__thumb"
-            data-lightbox-open={`${idPrefix}-${i + 1}`}
+            data-lightbox-open={idPrefix}
+            data-lightbox-index={i + 1}
             aria-label={`View larger: ${image.alt}`}
           >
             <ImageBleed
@@ -54,13 +56,7 @@ const [main, ...rest] = images;
   }
 </div>
 
-{
-  images.map((image, i) => (
-    <Lightbox id={`${idPrefix}-${i}`} label={image.alt}>
-      <ImageBleed src={image.src} alt={image.alt} width={1200} height={image.type === 'detail' ? 1200 : 1500} />
-    </Lightbox>
-  ))
-}
+<Lightbox id={idPrefix} label={`${main.alt} — full-size gallery`} images={images} />
 
 <style>
   .gallery {

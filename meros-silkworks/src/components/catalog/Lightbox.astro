@@ -1,68 +1,218 @@
 ---
 // §5 catalog component. Native <dialog> does most of the work: Escape-to-close
-// and focus-trapping come free from showModal(), so the only JS needed is
-// wiring the close button, backdrop-click, and open triggers.
+// and focus-trapping come free from showModal(). The dialog itself is a
+// fullscreen fixed overlay that flex-centers a "stage" holding one slide per
+// product image — that sidesteps the old width:100%-on-img-in-a-shrink-to-fit
+// box bug that pinned the enlarged photo off-center. One dialog now serves
+// the whole gallery (not one per image) so prev/next can cycle in place.
+import ImageBleed from '../system/Image.astro';
+
+interface LightboxImage {
+  src: ImageMetadata;
+  alt: string;
+  type?: 'primary' | 'onbody' | 'detail';
+}
+
 interface Props {
   id: string;
   label: string;
+  images: LightboxImage[];
   class?: string;
 }
 
-const { id, label, class: className } = Astro.props;
+const { id, label, images, class: className } = Astro.props;
+const multi = images.length > 1;
 ---
 
-<dialog id={id} class:list={['lightbox', className]} aria-label={label}>
+<dialog id={id} class:list={['lightbox', className]} aria-label={label} data-lightbox>
   <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close">
     <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
       <path d="M1 1L13 13M13 1L1 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
     </svg>
   </button>
-  <div class="lightbox__content">
-    <slot />
+
+  {
+    multi && (
+      <Fragment>
+        <button type="button" class="lightbox__arrow lightbox__arrow--prev" data-lightbox-prev aria-label="Previous image">
+          <svg width="9" height="15" viewBox="0 0 9 15" aria-hidden="true" focusable="false">
+            <path d="M8 1L1.5 7.5L8 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button type="button" class="lightbox__arrow lightbox__arrow--next" data-lightbox-next aria-label="Next image">
+          <svg width="9" height="15" viewBox="0 0 9 15" aria-hidden="true" focusable="false">
+            <path d="M1 1L7.5 7.5L1 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </Fragment>
+    )
+  }
+
+  <div class="lightbox__stage">
+    {
+      images.map((image, i) => (
+        <div class="lightbox__slide" data-lightbox-slide hidden={i !== 0}>
+          <div class="lightbox__zoom" data-lightbox-zoom>
+            <ImageBleed
+              src={image.src}
+              alt={image.alt}
+              width={1200}
+              height={image.type === 'detail' ? 1200 : 1500}
+              data-lightbox-img
+            />
+          </div>
+        </div>
+      ))
+    }
   </div>
+
+  {
+    multi && (
+      <p class="lightbox__counter" data-lightbox-counter aria-live="polite">
+        <span data-lightbox-current>1</span> / {images.length}
+      </p>
+    )
+  }
 </dialog>
 
 <style>
   .lightbox {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
     padding: 0;
     border: none;
-    max-width: min(90vw, 48rem);
-    max-height: 90vh;
-    background: var(--canvas);
-    border-radius: var(--radius);
+    background: transparent;
   }
 
   .lightbox::backdrop {
     background: color-mix(in srgb, var(--ink) 80%, transparent);
   }
 
-  .lightbox__close {
+  .lightbox__close,
+  .lightbox__arrow {
     position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
     z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
     border: none;
     border-radius: var(--radius);
     background: var(--canvas);
     color: var(--ink);
     cursor: pointer;
+    transition: opacity var(--dur-1) var(--ease);
   }
 
-  .lightbox__content {
-    display: flex;
-    max-height: 90vh;
+  .lightbox__close:hover,
+  .lightbox__arrow:hover {
+    opacity: 0.75;
   }
 
-  .lightbox__content :global(img) {
+  .lightbox__close {
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .lightbox__arrow {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .lightbox__arrow--prev {
+    left: var(--space-3);
+  }
+
+  .lightbox__arrow--next {
+    right: var(--space-3);
+  }
+
+  /* Every box from here down to the image has a *definite* size (not
+     shrink-to-fit auto) — that's deliberate. An img with width/height:auto
+     nested inside auto-sized flex wrappers has no definite box to resolve
+     percentages against and can collapse to 0×0; position:absolute + inset
+     against the fixed-size dialog guarantees a real number at every level,
+     which is what lets object-fit:contain center any aspect ratio cleanly. */
+  .lightbox__stage {
+    position: relative;
     width: 100%;
-    height: auto;
-    max-height: 90vh;
+    height: 100%;
+  }
+
+  .lightbox__slide {
+    position: absolute;
+    inset: var(--space-12) clamp(4.5rem, 10vw, 7rem);
+    display: flex;
+  }
+
+  .lightbox__slide[hidden] {
+    display: none;
+  }
+
+  .lightbox__zoom {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: var(--space-3);
+    box-sizing: border-box;
+    background: var(--canvas);
+    border-radius: var(--radius);
+  }
+
+  .lightbox__zoom :global([data-lightbox-img]) {
+    display: block;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
+    cursor: zoom-in;
+    transition: transform var(--dur-2) var(--ease);
+  }
+
+  .lightbox__zoom.is-zoomed :global([data-lightbox-img]) {
+    cursor: zoom-out;
+  }
+
+  .lightbox__counter {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-3);
+    transform: translateX(-50%);
+    z-index: 1;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius);
+    background: var(--canvas);
+    color: var(--muted);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-caps);
+    line-height: 1;
+  }
+
+  @media (max-width: 26rem) {
+    .lightbox__slide {
+      inset: var(--space-8) clamp(3rem, 15vw, 3.75rem);
+    }
+
+    .lightbox__arrow {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .lightbox__arrow--prev {
+      left: var(--space-2);
+    }
+
+    .lightbox__arrow--next {
+      right: var(--space-2);
+    }
   }
 </style>
 
@@ -70,21 +220,93 @@ const { id, label, class: className } = Astro.props;
   document.querySelectorAll('dialog.lightbox').forEach((dialog) => {
     if (!(dialog instanceof HTMLDialogElement)) return;
 
+    const slides = Array.from(dialog.querySelectorAll<HTMLElement>('[data-lightbox-slide]'));
+    const counter = dialog.querySelector<HTMLElement>('[data-lightbox-current]');
+    const prevBtn = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]');
+    const nextBtn = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+    let current = 0;
+
+    const resetZoom = (slide: HTMLElement) => {
+      const zoom = slide.querySelector<HTMLElement>('[data-lightbox-zoom]');
+      const img = slide.querySelector<HTMLElement>('[data-lightbox-img]');
+      zoom?.classList.remove('is-zoomed');
+      if (img) img.style.transformOrigin = '';
+    };
+
+    const show = (index: number) => {
+      const total = slides.length;
+      const next = ((index % total) + total) % total;
+      slides.forEach((slide, i) => {
+        const isActive = i === next;
+        slide.hidden = !isActive;
+        if (!isActive) resetZoom(slide);
+      });
+      current = next;
+      if (counter) counter.textContent = String(next + 1);
+    };
+
+    dialog.addEventListener('lightbox:show', (event) => {
+      show((event as CustomEvent<number>).detail ?? 0);
+    });
+
+    prevBtn?.addEventListener('click', () => show(current - 1));
+    nextBtn?.addEventListener('click', () => show(current + 1));
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        show(current - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(current + 1);
+      }
+    });
+
+    dialog.querySelectorAll<HTMLElement>('[data-lightbox-img]').forEach((img) => {
+      img.addEventListener('click', (event) => {
+        const zoom = img.closest<HTMLElement>('[data-lightbox-zoom]');
+        if (!zoom) return;
+
+        if (zoom.classList.contains('is-zoomed')) {
+          zoom.classList.remove('is-zoomed');
+          img.style.transformOrigin = '';
+          img.style.transform = '';
+          return;
+        }
+
+        const rect = img.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        img.style.transformOrigin = `${x}% ${y}%`;
+        img.style.transform = 'scale(2)';
+        zoom.classList.add('is-zoomed');
+      });
+    });
+
     dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
 
-    // Backdrop click: the dialog element's own box is the backdrop area
-    // once its content no longer fills it, so a click target equal to the
-    // dialog itself means "outside the content."
+    // Anything that isn't the image, the counter, or a control button
+    // counts as "outside the photo" — close on click there.
     dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) dialog.close();
+      const target = event.target as HTMLElement;
+      const interactive = target.closest(
+        '[data-lightbox-zoom], [data-lightbox-close], [data-lightbox-prev], [data-lightbox-next], [data-lightbox-counter]',
+      );
+      if (!interactive) dialog.close();
     });
+
+    dialog.addEventListener('close', () => slides.forEach(resetZoom));
   });
 
   document.querySelectorAll<HTMLElement>('[data-lightbox-open]').forEach((trigger) => {
     trigger.addEventListener('click', () => {
       const id = trigger.getAttribute('data-lightbox-open');
       const dialog = id ? document.getElementById(id) : null;
-      if (dialog instanceof HTMLDialogElement) dialog.showModal();
+      if (!(dialog instanceof HTMLDialogElement)) return;
+
+      const index = Number(trigger.getAttribute('data-lightbox-index') ?? 0);
+      dialog.dispatchEvent(new CustomEvent('lightbox:show', { detail: index }));
+      dialog.showModal();
     });
   });
 </script>
