@@ -1,6 +1,12 @@
 ---
-// §5 catalog component. Minimum 3 images per §4.3 — full product, on-body,
-// macro detail. Each thumbnail opens its own Lightbox instance on click.
+// §5 catalog component. Etsy-style layout: a vertical thumbnail rail
+// (tablet/desktop) or a below-the-fold row (mobile) drives which image
+// shows in the main stage, independent of the Lightbox. Every image is
+// pre-rendered at "main" size as its own stage slide (like Lightbox's own
+// slides) so swapping is a client-side `hidden` toggle, not a re-fetch —
+// this is a static site, there's no server to ask for a bigger version
+// on click. Clicking the visible main image still opens the full-screen
+// Lightbox at that same index.
 import ImageBleed from '../system/Image.astro';
 import Lightbox from './Lightbox.astro';
 
@@ -17,43 +23,55 @@ interface Props {
 }
 
 const { images, idPrefix = 'gallery', class: className } = Astro.props;
-const [main, ...rest] = images;
+const main = images[0];
 ---
 
 <div class:list={['gallery', className]}>
-  <button
-    type="button"
-    class="gallery__main"
-    data-lightbox-open={idPrefix}
-    data-lightbox-index="0"
-    aria-label={`View larger: ${main.alt}`}
-  >
-    <ImageBleed src={main.src} alt={main.alt} width={900} height={1125} class="gallery__image" />
-  </button>
+  <div class="gallery__thumbs">
+    {
+      images.map((image, i) => (
+        <button
+          type="button"
+          class="gallery__thumb"
+          data-gallery-thumb
+          aria-current={i === 0 ? 'true' : undefined}
+          aria-label={`Show image ${i + 1} of ${images.length}: ${image.alt}`}
+        >
+          <ImageBleed
+            src={image.src}
+            alt=""
+            width={400}
+            height={image.type === 'detail' ? 400 : 500}
+            class="gallery__image"
+          />
+        </button>
+      ))
+    }
+  </div>
 
-  {
-    rest.length > 0 && (
-      <div class="gallery__thumbs">
-        {rest.map((image, i) => (
+  <div class="gallery__stage">
+    {
+      images.map((image, i) => (
+        <div class="gallery__slide" data-gallery-slide hidden={i !== 0}>
           <button
             type="button"
-            class="gallery__thumb"
+            class="gallery__main"
             data-lightbox-open={idPrefix}
-            data-lightbox-index={i + 1}
+            data-lightbox-index={i}
             aria-label={`View larger: ${image.alt}`}
           >
             <ImageBleed
               src={image.src}
               alt={image.alt}
-              width={400}
-              height={image.type === 'detail' ? 400 : 500}
+              width={900}
+              height={image.type === 'detail' ? 900 : 1125}
               class="gallery__image"
             />
           </button>
-        ))}
-      </div>
-    )
-  }
+        </div>
+      ))
+    }
+  </div>
 </div>
 
 <Lightbox id={idPrefix} label={`${main.alt} — full-size gallery`} images={images} />
@@ -65,9 +83,18 @@ const [main, ...rest] = images;
     gap: var(--space-3);
   }
 
+  .gallery__stage {
+    order: -1;
+  }
+
+  .gallery__slide[hidden] {
+    display: none;
+  }
+
   .gallery__main,
   .gallery__thumb {
     display: block;
+    width: 100%;
     padding: 0;
     border: none;
     background: none;
@@ -88,10 +115,72 @@ const [main, ...rest] = images;
 
   .gallery__thumb {
     aspect-ratio: 4 / 5;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity var(--dur-1) var(--ease);
+  }
+
+  .gallery__thumb:hover,
+  .gallery__thumb:focus-visible {
+    opacity: 1;
+  }
+
+  .gallery__thumb[aria-current='true'] {
+    opacity: 1;
+    box-shadow: var(--focus-ring);
   }
 
   .gallery__image {
     width: 100%;
     height: 100%;
   }
+
+  @media (min-width: 48rem) {
+    .gallery {
+      flex-direction: row;
+      /* flex-start, not stretch: the stage's height comes from its own
+         aspect-ratio, not from matching the thumb rail. With stretch, a
+         product with many images would pull the stage's height up to the
+         rail's full (unscrolled) content height, leaving dead space below
+         the actual photo. The rail gets a height cap of its own instead
+         and scrolls internally when there are more thumbs than fit. */
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .gallery__stage {
+      order: 0;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .gallery__thumbs {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      width: 5.5rem;
+      flex-shrink: 0;
+      max-height: 34rem;
+      overflow-y: auto;
+    }
+  }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.gallery').forEach((gallery) => {
+    const thumbs = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-thumb]'));
+    const slides = Array.from(gallery.querySelectorAll<HTMLElement>('[data-gallery-slide]'));
+
+    thumbs.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => {
+        slides.forEach((slide, i) => {
+          slide.hidden = i !== index;
+        });
+        thumbs.forEach((t, i) => {
+          if (i === index) t.setAttribute('aria-current', 'true');
+          else t.removeAttribute('aria-current');
+        });
+      });
+    });
+  });
+</script>
