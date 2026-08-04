@@ -5,13 +5,13 @@ price: 20
 etsyUrl: "https://www.etsy.com/listing/4345138129/atlasikat-hair-bow"
 images:
   - src: "../../assets/products/atlas-ikat-hair-bow-primary.jpg"
-    alt: "A red, green, and yellow atlas ikat silk hair bow with a gold alligator clip"
+    alt: "Atlas ikat hair bow in pink, blue, and navy tones tied on a marble surface"
     type: primary
   - src: "../../assets/products/atlas-ikat-hair-bow-onbody.jpg"
     alt: "Atlas ikat hair bow in pink and blue tones worn in a low ponytail outdoors"
     type: onbody
   - src: "../../assets/products/atlas-ikat-hair-bow-detail-1.jpg"
-    alt: "Atlas ikat hair bow in pink, blue, and navy tones tied on a marble surface"
+    alt: "A red, green, and yellow atlas ikat silk hair bow with a gold alligator clip"
     type: detail
   - src: "../../assets/products/atlas-ikat-hair-bow-detail-2.jpg"
     alt: "Ikat fabric swatches in red-white-blue, all-blue, and red-pink-white colorways"

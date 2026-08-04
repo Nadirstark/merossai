@@ -5,7 +5,7 @@ price: 30
 etsyUrl: "https://www.etsy.com/listing/4510142251/embellished-atlasikat-hat"
 images:
   - src: "../../assets/products/embellished-atlas-ikat-hat-primary.jpg"
-    alt: "Close-up of pearl bead fringe along the brim of a gold and cream ikat baseball cap"
+    alt: "A gold and cream ikat baseball cap with pearl bead fringe along the brim"
     type: primary
   - src: "../../assets/products/embellished-atlas-ikat-hat-onbody.jpg"
     alt: "Back view of a gold and cream ikat baseball cap showing the adjustable strap"
@@ -20,7 +20,7 @@ images:
     alt: "A black bucket hat with a multicolor ikat ribbon band and black beaded brim edge"
     type: detail
   - src: "../../assets/products/embellished-atlas-ikat-hat-detail-4.jpg"
-    alt: "A gold and cream ikat baseball cap with pearl bead fringe along the brim"
+    alt: "Close-up of pearl bead fringe along the brim of a gold and cream ikat baseball cap"
     type: detail
   - src: "../../assets/products/embellished-atlas-ikat-hat-detail-5.jpg"
     alt: "Close-up of the multicolor ikat ribbon trim and black beaded edge on a bucket hat"

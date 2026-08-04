@@ -5,7 +5,7 @@ price: 10
 etsyUrl: "https://www.etsy.com/listing/4423238717/doppi-hair-ties"
 images:
   - src: "../../assets/products/doppi-hair-ties-primary.jpg"
-    alt: "A small embroidered doppi-style hair tie in a black, white, red, and yellow cross-stitch pattern on a marble plate"
+    alt: "Close-up of the cross-stitch embroidery pattern on a doppi hair tie"
     type: primary
   - src: "../../assets/products/doppi-hair-ties-onbody.jpg"
     alt: "Embroidered doppi hair tie worn on a wrist"
@@ -17,7 +17,7 @@ images:
     alt: "Three embroidered doppi hair ties grouped together on a marble plate"
     type: detail
   - src: "../../assets/products/doppi-hair-ties-detail-3.jpg"
-    alt: "Close-up of the cross-stitch embroidery pattern on a doppi hair tie"
+    alt: "A small embroidered doppi-style hair tie in a black, white, red, and yellow cross-stitch pattern on a marble plate"
     type: detail
 shortDescription: "A miniature doppi — the traditional Turkic cap — rebuilt as a 2in hair tie in atlas ikat, hand-made in Uzbekistan."
 materials: "Handwoven atlas ikat silk offcuts wrapped over a soft elastic cord."

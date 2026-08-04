@@ -5,22 +5,22 @@ price: 12
 etsyUrl: "https://www.etsy.com/listing/4345113144/atlasikat-scrunchies"
 images:
   - src: "../../assets/products/atlas-ikat-scrunchies-primary.jpg"
-    alt: "A metallic silver ikat scrunchie worn on a wrist, resting on a marble plate"
+    alt: "A metallic silver ikat scrunchie on a marble plate, labeled 'Kumush'"
     type: primary
   - src: "../../assets/products/atlas-ikat-scrunchies-onbody.jpg"
-    alt: "A pile of atlas ikat scrunchies in silver, red-and-white, and gold-embellished colorways on a marble plate"
+    alt: "A metallic silver ikat scrunchie worn stacked on a wrist, resting on a marble plate"
     type: onbody
   - src: "../../assets/products/atlas-ikat-scrunchies-detail-1.jpg"
-    alt: "A metallic silver ikat scrunchie on a marble plate, labeled 'Kumush'"
+    alt: "A pile of atlas ikat scrunchies in silver, red-and-white, and gold-embellished colorways on a marble plate"
     type: detail
   - src: "../../assets/products/atlas-ikat-scrunchies-detail-2.jpg"
     alt: "A silver and charcoal striped ikat scrunchie on a marble plate, labeled 'Ziyoda'"
     type: detail
   - src: "../../assets/products/atlas-ikat-scrunchies-detail-3.jpg"
-    alt: "A metallic silver ikat scrunchie worn on a wrist"
+    alt: "A metallic silver ikat scrunchie worn stacked on a wrist"
     type: detail
   - src: "../../assets/products/atlas-ikat-scrunchies-detail-4.jpg"
-    alt: "A metallic silver ikat scrunchie worn stacked on a wrist"
+    alt: "A metallic silver ikat scrunchie bunched on a marble plate"
     type: detail
   - src: "../../assets/products/atlas-ikat-scrunchies-detail-5.jpg"
     alt: "A black and white plaid ikat scrunchie worn on a wrist alongside a watch"

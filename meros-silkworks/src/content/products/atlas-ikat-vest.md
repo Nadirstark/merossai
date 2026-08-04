@@ -5,13 +5,13 @@ price: 60
 etsyUrl: "https://www.etsy.com/listing/4470077108/atlasikat-vest"
 images:
   - src: "../../assets/products/atlas-ikat-vest-primary.jpg"
-    alt: "Close-up of black beaded fringe embellishment on a black-and-white atlas ikat vest"
+    alt: "Black-and-white atlas ikat vest on a dress form, front view with beaded neckline and fringe hem"
     type: primary
   - src: "../../assets/products/atlas-ikat-vest-onbody.jpg"
     alt: "Black-and-white atlas ikat vest on a dress form, back view showing the open back and beaded fringe hem"
     type: onbody
   - src: "../../assets/products/atlas-ikat-vest-detail-1.jpg"
-    alt: "Black-and-white atlas ikat vest on a dress form, front view with beaded neckline and fringe hem"
+    alt: "Close-up of black beaded fringe embellishment on a black-and-white atlas ikat vest"
     type: detail
   - src: "../../assets/products/atlas-ikat-vest-detail-2.jpg"
     alt: "Close-up of the beaded trim along the neckline and shoulder of an atlas ikat vest"
