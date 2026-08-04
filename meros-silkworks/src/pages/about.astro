@@ -11,7 +11,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/content/Hero.astro';
 import StoryBlock from '../components/content/StoryBlock.astro';
 import ImageBleed from '../components/system/Image.astro';
-import founderPlaceholder from '../assets/about/founder-placeholder.jpg';
+import saidaPortrait from '../assets/about/saida-portrait.jpg';
 
 const products = await getCollection('products');
 const scarfProduct = products.find((product) => product.id === 'atlas-ikat-neck-scarf') ?? products[0];
@@ -31,15 +31,7 @@ const heroImage = scarfProduct.data.images.find((image) => image.type === 'detai
   <div class="page">
     <div class="about">
       <figure class="about__photo">
-        <ImageBleed
-          src={founderPlaceholder}
-          alt="[Placeholder — photo of Saida: her face, her hands at work, or her studio]"
-          width={900}
-          height={1125}
-        />
-        <figcaption class="about__photo-caption">
-          [Photo placeholder — face, hands, or workspace]
-        </figcaption>
+        <ImageBleed src={saidaPortrait} alt="Saida, the maker behind Meros Silkworks" width={900} height={1125} />
       </figure>
 
       <div class="about__copy">
@@ -106,14 +98,6 @@ const heroImage = scarfProduct.data.images.find((image) => image.type === 'detai
 
   .about__photo {
     max-width: 24rem;
-  }
-
-  .about__photo-caption {
-    margin-top: var(--space-2);
-    color: var(--muted);
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
   }
 
   .about__byline {
