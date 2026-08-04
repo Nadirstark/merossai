@@ -5,14 +5,8 @@ price: 55
 etsyUrl: "https://www.etsy.com/shop/MerosSilkworks"
 images:
   - src: "../../assets/products/atlas-ikat-custom-baska-primary.jpg"
-    alt: "A made-to-order atlas ikat silk baska, the fitted Uzbek basque skirt, in deep purple bleed-dye"
+    alt: "Black glass beads, sequins, and thread laid out on dark atlas ikat silk, mid-embellishment for a custom baska"
     type: primary
-  - src: "../../assets/products/atlas-ikat-custom-baska-onbody.jpg"
-    alt: "Atlas ikat baska skirt worn as part of an event outfit"
-    type: onbody
-  - src: "../../assets/products/atlas-ikat-custom-baska-detail.jpg"
-    alt: "Close-up of the fitted waistband and dye bleed on an atlas ikat baska"
-    type: detail
 shortDescription: "A baska — the fitted Uzbek basque skirt — built to order in atlas ikat silk chosen for your event."
 materials: "Handwoven atlas ikat silk, fully lined, made to your measurements."
 care: "Dry clean only."

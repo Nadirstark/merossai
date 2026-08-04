@@ -5,13 +5,22 @@ price: 20
 etsyUrl: "https://www.etsy.com/listing/4345135384/atlasikat-bag-charmribbon"
 images:
   - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-primary.jpg"
-    alt: "An atlas ikat silk ribbon bag charm in burnt orange bleed-dye"
+    alt: "Atlas ikat silk ribbon bow bag charm with gold lobster clasp, in cream and burgundy, laid on a marble round against a striped ikat backdrop"
     type: primary
   - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-onbody.jpg"
-    alt: "Atlas ikat bag charm clipped to the strap of a tote bag"
+    alt: "Atlas ikat bag charm clipped to the chain strap of a pink crossbody bag worn over the shoulder"
     type: onbody
-  - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-detail.jpg"
-    alt: "Close-up of the ribbon edge and clasp hardware on an atlas ikat bag charm"
+  - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-detail-1.jpg"
+    alt: "Pink leather bag with the atlas ikat ribbon charm clasped to its gold chain, hanging against a plain wall"
+    type: detail
+  - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-detail-2.jpg"
+    alt: "Flat lay of the pink bag and untied ikat ribbon on a marble round, with colorful striped ikat fabric in the background"
+    type: detail
+  - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-detail-3.jpg"
+    alt: "Close flat lay of the atlas ikat ribbon tied to the bag's chain strap on a marble surface"
+    type: detail
+  - src: "../../assets/products/atlas-ikat-bag-charm-ribbon-detail-4.jpg"
+    alt: "Pink bag with ikat ribbon charm styled against a window, with colorful ikat fabric draped alongside"
     type: detail
 shortDescription: "Guli — a bestselling atlas ikat bag charm that arrives tied as a bow and can be untied to restyle."
 materials: "Handwoven atlas ikat silk ribbon, lobster clasp hardware."
